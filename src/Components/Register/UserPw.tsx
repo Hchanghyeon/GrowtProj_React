@@ -32,11 +32,13 @@ const InputButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
+  cursor:pointer;
 `;
 
 const ErrorMsgDiv = styled.div`
   width: 100%;
   text-align:center;
+  font-size:13px;
 `;
 
 const UserPw = ({ addUser, changeBtn }: any) => {
@@ -75,7 +77,7 @@ const UserPw = ({ addUser, changeBtn }: any) => {
         }
     }
   };
-
+0
   return (
     <>
       {errMsg !== "" ? <ErrorMsgDiv>{errMsg}</ErrorMsgDiv> : null}

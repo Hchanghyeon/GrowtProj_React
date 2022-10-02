@@ -18,6 +18,34 @@ const Form = styled.div`
   }
 `;
 
+const FinishBtnContainer = styled.div`
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+`
+
+const InputButton = styled.button`
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  background-color: #83b551;
+  border-style: none;
+  color: white;
+  border-radius: 5px;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+  cursor:pointer;
+
+  #btndis {
+    background-color:silver;
+    color:white;
+  }
+`;
+
+
+
 const RegisterForm = ({changeLoginState}:any) => {
   const [users, setUsers] = useState<any>({
     userId:'',
@@ -47,6 +75,10 @@ const RegisterForm = ({changeLoginState}:any) => {
     setBtn(next);
   };
 
+  const submitData = () => {
+    console.log(users);
+  }
+
   return (
     <Form>
       {btn === "UserId" ? <UserId addUser={addUser} changeBtn={changeBtn}></UserId> : null}
@@ -55,6 +87,9 @@ const RegisterForm = ({changeLoginState}:any) => {
       {btn === "UserMail" ? <UserMail addUser={addUser} changeBtn={changeBtn}></UserMail> : null}
       {btn === "UserBirth" ? <UserBirth addUser={addUser} changeBtn={changeBtn}></UserBirth> : null}
       {btn === "UserAddr" ? <UserAddr addUser={addUser} changeBtn={changeBtn}></UserAddr> : null}
+      {btn === "FinishBtn" ? <FinishBtnContainer>
+        <InputButton onClick={submitData}>회원가입</InputButton>
+      </FinishBtnContainer> : null}
     </Form>
   );
 };

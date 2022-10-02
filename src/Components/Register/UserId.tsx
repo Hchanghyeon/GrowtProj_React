@@ -48,9 +48,12 @@ const CheckButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
+  cursor:pointer;
 `;
 
-const ErrMessage = styled.div``;
+const ErrMessage = styled.div`
+font-size:13px;
+`;
 
 const UserId = ({ addUser, changeBtn }: any) => {
   const [userId, setUserId] = useState("");

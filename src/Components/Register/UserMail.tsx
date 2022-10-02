@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { sendEmail } from "../../API/User/User";
 
+
 const Input = styled.input`
   width: calc(100% - 11px);
   height: 50px;
@@ -33,6 +34,12 @@ const InputButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
+  cursor:pointer;
+
+  #btndis {
+    background-color:silver;
+    color:white;
+  }
 `;
 
 const CheckButton = styled.button`
@@ -48,6 +55,7 @@ const CheckButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
+  cursor:pointer;
 `;
 
 const ErrorMsgDiv = styled.div`
@@ -60,15 +68,17 @@ const TimerDiv = styled.div`
   text-align: center;
 `;
 
+
 const UserMail = ({ addUser, changeBtn }: any) => {
   const [userMail, setUserMail] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const [counter, setCounter] = useState(180);
-  const [timer, setTimer] = useState("");
   const [startTimer, setStartTimer] = useState(false);
   const [btnClick, setBtnClick] = useState('');
   const [number, setNumber] = useState(0);
-  const counterRef = useRef(180);
+  const [counter, setCounter] = useState(180);
+  const [submitClick, setSubmitClick] = useState(false);
+  const intervalRef = useRef<any>(null);
+ 
   const onChangeUserMail = (e: any) => {
     setUserMail(e.target.value);
   };
@@ -76,22 +86,10 @@ const UserMail = ({ addUser, changeBtn }: any) => {
   const onChangeNumber = (e: any) => {
     setNumber(e.target.value);
   }
-  useEffect(() => {
-    const timerCounter = setInterval(() => {
-      if (counter < 170) {
-        console.log('동작');
-        clearInterval(timerCounter);
-      }
-      const minute = parseInt((counter / 60).toString());
-      const second = counter % 60;
-      setTimer(`${minute}분 ${second}초 남았습니다`);
-      setCounter((counterRef.current -= 1));
-    }, 1000);
-    return () => clearInterval(timerCounter);
-  }, [counter]);
 
   const clickBtn = () => {
-    changeBtn("UserPw");
+    addUser("userMail", userMail);
+    changeBtn("UserBirth");
   };
 
   const sendMail = async () => {
@@ -99,23 +97,34 @@ const UserMail = ({ addUser, changeBtn }: any) => {
     if (data.json.result === "error") {
       setErrMsg("이메일 전송에 실패했습니다. 제대로 입력했는지 확인하세요");
     } else {
+      start();
       setStartTimer(true);
       setBtnClick(data.json.result);
     }
   };
 
   const sameNumCheck = () => {
-    console.log(number, parseInt(btnClick));
     if(number == parseInt(btnClick)){
-        console.log('동일함');
+        setSubmitClick(true);
     }else{
-        console.log('틀림');
+       setErrMsg('인증번호가 맞지 않습니다');
     }
   }
 
+    const start:any = () => {
+        intervalRef.current = setInterval(() => {
+            setCounter(c => c -1);
+        },1000);
+    } 
+
+    const stop:any = () => {
+      clearInterval(intervalRef.current);
+    }
+
   return (
     <>
-      {counter > 0 ? <TimerDiv>{timer}</TimerDiv> : null}
+      {startTimer ? <TimerDiv>{`${counter}초 남았습니다`}</TimerDiv> :null }
+      {counter < 1 ? stop() : null}
       {errMsg !== "" ? <ErrorMsgDiv>{errMsg}</ErrorMsgDiv> : null}
       <InputHeader>이메일</InputHeader>
       <Input type="email" onChange={onChangeUserMail}></Input>
@@ -124,7 +133,9 @@ const UserMail = ({ addUser, changeBtn }: any) => {
       <Input type="number" onChange={onChangeNumber} />
       <CheckButton onClick={sameNumCheck}> 인증</CheckButton> 
       </>: <CheckButton onClick={sendMail}>인증번호 발송</CheckButton>
-      }<InputButton>확인</InputButton>
+      }
+      {submitClick ? <InputButton onClick={clickBtn}>확인</InputButton> : null}
+      
     </>
   );
 };
