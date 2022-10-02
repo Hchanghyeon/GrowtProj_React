@@ -45,7 +45,7 @@ export const signup = async (credentials:any) => {
         body: JSON.stringify(credentials)
     };
 
-    return await response("user/register/", option);
+    return await response("user/userRegister/", option);
 }
 
 

@@ -6,6 +6,7 @@ import UserBirth from "../Register/UserBirth";
 import UserAddr from "../Register/UserAddr";
 import UserName from "../Register/UserName";
 import UserMail from "../Register/UserMail";
+import { signin, signup } from "../../API/User/User";
 
 const Form = styled.div`
   width: 90%;
@@ -19,11 +20,11 @@ const Form = styled.div`
 `;
 
 const FinishBtnContainer = styled.div`
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const InputButton = styled.button`
   width: 100%;
@@ -36,38 +37,36 @@ const InputButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
-  cursor:pointer;
+  cursor: pointer;
 
   #btndis {
-    background-color:silver;
-    color:white;
+    background-color: silver;
+    color: white;
   }
 `;
 
-
-
-const RegisterForm = ({changeLoginState}:any) => {
+const RegisterForm = ({ changeLoginState }: any) => {
   const [users, setUsers] = useState<any>({
-    userId:'',
-    userPw:'',
-    userName:'',
-    userMail:'',
-    userBirth:'',
-    userAddr1:'',
-    userAddr2:'',
+    userId: "",
+    userPw: "",
+    userName: "",
+    userMail: "",
+    userBirth: "",
+    userAddr1: "",
+    userAddr2: "",
   });
   const [btn, setBtn] = useState<any>("UserId");
 
   useEffect(() => {
     setUsers({});
     setBtn("UserId");
-  },[changeLoginState]);
+  }, [changeLoginState]);
 
-  const addUser = (key:any, value: any) => {
-    setUsers((prevState:any) => {
-        let newList = {...prevState};
-        newList[key] = value;
-        return newList;
+  const addUser = (key: any, value: any) => {
+    setUsers((prevState: any) => {
+      let newList = { ...prevState };
+      newList[key] = value;
+      return newList;
     });
   };
 
@@ -75,21 +74,48 @@ const RegisterForm = ({changeLoginState}:any) => {
     setBtn(next);
   };
 
-  const submitData = () => {
-    console.log(users);
-  }
+  const submitData = async () => {
+    const result : any = await signup(users);
+    if (result.json.result) {
+      setBtn("success");
+    } else {
+      setBtn("failed");
+    }
+  };
 
   return (
     <Form>
-      {btn === "UserId" ? <UserId addUser={addUser} changeBtn={changeBtn}></UserId> : null}
-      {btn === "UserPw" ? <UserPw addUser={addUser} changeBtn={changeBtn}></UserPw> : null}
-      {btn === "UserName" ? <UserName addUser={addUser} changeBtn={changeBtn}></UserName> : null}
-      {btn === "UserMail" ? <UserMail addUser={addUser} changeBtn={changeBtn}></UserMail> : null}
-      {btn === "UserBirth" ? <UserBirth addUser={addUser} changeBtn={changeBtn}></UserBirth> : null}
-      {btn === "UserAddr" ? <UserAddr addUser={addUser} changeBtn={changeBtn}></UserAddr> : null}
-      {btn === "FinishBtn" ? <FinishBtnContainer>
-        <InputButton onClick={submitData}>회원가입</InputButton>
-      </FinishBtnContainer> : null}
+      {btn === "UserId" ? (
+        <UserId addUser={addUser} changeBtn={changeBtn}></UserId>
+      ) : null}
+      {btn === "UserPw" ? (
+        <UserPw addUser={addUser} changeBtn={changeBtn}></UserPw>
+      ) : null}
+      {btn === "UserName" ? (
+        <UserName addUser={addUser} changeBtn={changeBtn}></UserName>
+      ) : null}
+      {btn === "UserMail" ? (
+        <UserMail addUser={addUser} changeBtn={changeBtn}></UserMail>
+      ) : null}
+      {btn === "UserBirth" ? (
+        <UserBirth addUser={addUser} changeBtn={changeBtn}></UserBirth>
+      ) : null}
+      {btn === "UserAddr" ? (
+        <UserAddr addUser={addUser} changeBtn={changeBtn}></UserAddr>
+      ) : null}
+      {btn === "FinishBtn" ? (
+        <FinishBtnContainer>
+          <InputButton onClick={submitData}>회원가입</InputButton>
+        </FinishBtnContainer>
+      ) : null}
+      {btn === "success" ? (
+        <FinishBtnContainer>회원가입을 축하합니다</FinishBtnContainer>
+      ) : null}
+      {btn === "failed" ? (
+                <FinishBtnContainer>
+                회원가입에 실패했습니다 다시 시도해주세요
+              </FinishBtnContainer>
+      ) : null}
     </Form>
   );
 };
