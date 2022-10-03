@@ -4,8 +4,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { config } from "../../Config/Config";
 import { signin } from "../../API/User/User";
-import { SET_TOKEN } from "../../Store/Token/Token";
-import { SET_USER } from "../../Store/User/User";
+import { SET_USER} from "../../Store/User/User";
 
 const Form = styled.div`
   width: 90%;
@@ -112,8 +111,12 @@ const LoginForm = ({changeLoginState}:any) => {
       if(data.json.message){
         setErrorMsg('아이디 또는 비밀번호가 틀렸습니다');
       } else {
-        dispatch(SET_TOKEN(data.json.accessToken));
-        dispatch(SET_USER(data.json.userId));
+        const payload = {
+          accessToken : data.json.accessToken,
+          imgSrc : data.json.imgSrc,
+          userId : data.json.userId
+        }
+        dispatch(SET_USER(payload));
         changeLoginState(); // 모달 닫기
         setErrorMsg('');
       }

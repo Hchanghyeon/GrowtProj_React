@@ -3,17 +3,18 @@ import { persistReducer } from "redux-persist";
 import storageSession from "redux-persist/lib/storage/session";
 
 import TokenReducer from "./Token/Token";
+import UserReducer from "./User/User";
 
 const persistConfig:any= {
     key: 'root',
     storage: storageSession,
 }
 
-const persistedReducer = persistReducer(persistConfig, TokenReducer);
+const userPersistedReducer = persistReducer(persistConfig, UserReducer);
 
 export default configureStore({
     reducer: {
-        token:persistedReducer,
+        user:userPersistedReducer
     },
     middleware: getDefaultMiddleware({
         serializableCheck: false,

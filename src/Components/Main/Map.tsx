@@ -6,10 +6,8 @@ import {
   faHeart,
   faLocationCrosshairs,
 } from "@fortawesome/free-solid-svg-icons";
-import { config } from "../../Config/Config";
 import * as fetchSpot from "../../API/Spot/Spot";
 
-const HTTPREQUEST = config.http.requestURL;
 
 const NaverMap = styled.div`
   height: calc(100vh - 182px);
@@ -22,7 +20,7 @@ const NaverMap = styled.div`
   }
 `;
 
-const DivContainer = styled.div`
+const DivContainer = styled.a`
   position: absolute;
   visibility: hidden;
   z-index: 30;
@@ -33,6 +31,8 @@ const DivContainer = styled.div`
   opacity: 0;
   border-radius: 20px;
   transition-duration: 0.5s;
+  text-decoration:none;
+  color:black;
   @media screen and (max-width: 768px) {
     bottom: 50px;
   }
@@ -275,6 +275,7 @@ const Map = (userClickBtn: any) => {
             spotTitle.innerHTML = result[i].title;
             spotIntro.innerHTML = result[i].address;
             like.innerHTML = result[i].likeNum;
+            mapBtn.href= `/spot/info/${result[i].contentsid}`;
             mapBtn.style.visibility = "visible";
             mapBtn.style.opacity = 1;
             if (marker.getAnimation() !== null) {
@@ -293,7 +294,7 @@ const Map = (userClickBtn: any) => {
   return (
     <>
       <NaverMap id="map"></NaverMap>
-      <DivContainer id="clickMapBtn">
+      <DivContainer id="clickMapBtn" >
         <ImgContainer>
           <Img id="srcimg" src="" />
           <XBtn onClick={closeModal}>

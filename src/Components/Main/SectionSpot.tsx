@@ -42,7 +42,7 @@ const SectionContainer = styled.div`
   }
 `;
 
-const ImgConainter = styled.div`
+const ImgConainter = styled.a`
   margin: 0px auto;
   max-width: 300px;
   max-height: 385px;
@@ -50,6 +50,8 @@ const ImgConainter = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
+  text-decoration:none;
+  color:black;
   align-items: center;
   flex-direction: column;
   cursor: pointer;
@@ -89,38 +91,37 @@ const TextLike = styled.div``;
 const SectionSpot = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
   useEffect(() => {
-    const start:any = async () =>{
-      const data:any = await fetchSpot.getSpotData(userClickBtn.userClickBtn);
-      if(data.status === false){
+    const start: any = async () => {
+      const data: any = await fetchSpot.getSpotData(userClickBtn.userClickBtn);
+      if (data.status === false) {
         setSpotData([]);
-      } else{
+      } else {
         setSpotData(data.json);
       }
-
-    }
+    };
     start();
   }, [userClickBtn]);
 
   return (
     <SectionContainer>
-      {spotData.map((item:any, i:any) => {
+      {spotData.map((item: any, i: any) => {
         return (
-          <ImgConainter key={item.contentsid}>
-            <Img src={item.imgpath}></Img>
-            <ImgText>
-              <TextHeader>
-                <TextTitle>{item.title}</TextTitle>
-                <TextLike>
-                  <FontAwesomeIcon
-                    icon={faHeart}
-                    style={{ marginRight: "5px", color: "pink" }}
-                  />
-                  {item.likeNum}
-                </TextLike>
-              </TextHeader>
-              <TextCategory>{item.contentslabel}</TextCategory>
-              <TextAddr>{item.address}</TextAddr>
-            </ImgText>
+          <ImgConainter href={`/spot/info/${item.contentsid}`} key={item.contentsid}>
+              <Img src={item.imgpath}></Img>
+              <ImgText>
+                <TextHeader>
+                  <TextTitle>{item.title}</TextTitle>
+                  <TextLike>
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      style={{ marginRight: "5px", color: "pink" }}
+                    />
+                    {item.likeNum}
+                  </TextLike>
+                </TextHeader>
+                <TextCategory>{item.contentslabel}</TextCategory>
+                <TextAddr>{item.address}</TextAddr>
+              </ImgText>
           </ImgConainter>
         );
       })}

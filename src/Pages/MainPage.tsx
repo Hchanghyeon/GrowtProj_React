@@ -33,18 +33,14 @@ const MapRef = styled.div`
   margin-right: 5px;
 `;
 
-function MainPage() {
+function MainPage({ userLoginBtn, changeLoginState }: any) {
   const [clickMapBtn, setClickMapBtn] = useState<boolean>(false);
   const [userClickBtn, setUserClickBtn] = useState<string>("");
   const [assayClickBtn, setAssayClickBtn] = useState<boolean>(false);
-  const [userLoginBtn, setUserLoginBtn] = useState<boolean>(false);
+
 
   const changeState = () => {
     setClickMapBtn(!clickMapBtn);
-  };
-
-  const changeLoginState = () => {
-    setUserLoginBtn(!userLoginBtn);
   };
 
   const selectCategory = (value: any) => {

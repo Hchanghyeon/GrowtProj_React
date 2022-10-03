@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { DELETE_TOKEN } from "../../Store/Token/Token";
+import { DELETE_USER } from "../../Store/User/User";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSearch,
-  faBars,
   faEllipsisVertical,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { BASE_URL } from "../../API/Common";
 
 const HeaderMain = styled.div`
   height: 80px;
@@ -109,6 +108,11 @@ const MenuUl = styled.ul`
   z-index: 1;
   box-shadow: 0px 0px 5px 0px silver;
   background-color: white;
+
+  a {
+    text-decoration:none;
+    color: #606060;
+  }
 `;
 const MenuLi = styled.li`
   font-size: 15px;
@@ -119,9 +123,22 @@ const MenuLi = styled.li`
   padding: 10px 20px;
 `;
 
+const UserLoginImgContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const UserLoginImg = styled.img`
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 5px;
+`;
+
 function Header({ changeLoginState }: any) {
-  const outSection = useRef<any>();
-  const userLoginState = useSelector((state: any) => state.token.authenticated);
+  const userLoginState = useSelector((state: any) => state.user.authenticated);
+  const userLoginImg = useSelector((state: any) => state.user.imgSrc);
   const dispatch = useDispatch();
 
   const openMenu = () => {
@@ -135,35 +152,39 @@ function Header({ changeLoginState }: any) {
   };
 
   const logout = () => {
-    dispatch(DELETE_TOKEN());
-    location.href = "/";
+    dispatch(DELETE_USER());
   };
 
   return (
     <HeaderMain>
-      <Link to="/">
+      <a href="/">
         <ImgLogo src="/img/GrowT_Logo.png"></ImgLogo>
-      </Link>
+      </a>
       <HeaderRight>
         <SearchA>
           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
         </SearchA>
-        <LoginBtn>
-          {userLoginState ? null : (
+        {userLoginState ? (
+          <UserLoginImgContainer>
+            <UserLoginImg src={`${BASE_URL}${userLoginImg}`} />
+          </UserLoginImgContainer>
+        ) : (
+          <LoginBtn>
             <UserLoginBtn onClick={changeLoginState}>
               <FontAwesomeIcon icon={faUser}></FontAwesomeIcon>
             </UserLoginBtn>
-          )}
-        </LoginBtn>
+          </LoginBtn>
+        )}
         <MenuBtn onClick={openMenu}>
           <FontAwesomeIcon icon={faEllipsisVertical}></FontAwesomeIcon>
           {userLoginState ? (
             <MenuUl>
-              <MenuLi>
-                <a onClick={logout}>로그아웃</a>
-              </MenuLi>
+              <a onClick={logout}>
+                <MenuLi>로그아웃</MenuLi>
+              </a>
               <MenuLi>내정보</MenuLi>
               <hr />
+              <a href="/"><MenuLi>홈</MenuLi></a>
               <MenuLi>여행일지</MenuLi>
               <MenuLi>나의 여행일지</MenuLi>
             </MenuUl>
@@ -174,6 +195,7 @@ function Header({ changeLoginState }: any) {
               </MenuLi>
               <MenuLi>회원가입</MenuLi>
               <hr />
+              <a href="/"><MenuLi>홈</MenuLi></a>
               <MenuLi>여행일지</MenuLi>
               <MenuLi>도움말</MenuLi>
             </MenuUl>

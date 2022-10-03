@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
+import { config } from "../../Config/Config";
+
+export const BASE_URL = config.http.BASE_URL;
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -100,7 +103,7 @@ const SectionAssay = (userClickBtn: any) => {
       {spotData.map((item, i) => {
         return (
           <ImgConainter key={item._id}>
-            <Img src={`http://growingtrip.com:3001${item.imgpath}`}></Img>
+            <Img src={`${BASE_URL}${item.imgpath}`}></Img>
             <ImgText>
               <TextHeader>
                 <TextTitle>{item.title}</TextTitle>
