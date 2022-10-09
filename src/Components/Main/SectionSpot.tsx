@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -50,8 +50,8 @@ const ImgConainter = styled.a`
   height: 100%;
   display: flex;
   justify-content: center;
-  text-decoration:none;
-  color:black;
+  text-decoration: none;
+  color: black;
   align-items: center;
   flex-direction: column;
   cursor: pointer;
@@ -90,38 +90,76 @@ const TextLike = styled.div``;
 
 const SectionSpot = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
-  useEffect(() => {
-    const start: any = async () => {
-      const data: any = await fetchSpot.getSpotData(userClickBtn.userClickBtn);
-      if (data.status === false) {
-        setSpotData([]);
-      } else {
+  const refNum: any = useRef(0);
+
+  const start: any = async () => {
+    let data: any;
+    if (userClickBtn.userClickBtn === "") {
+      data = await fetchSpot.getSpotData(refNum.current);
+    } else {
+      data = await fetchSpot.getCategorySpotData(
+        userClickBtn.userClickBtn,
+        refNum.current
+      );
+    }
+    if (data.status === false) {
+      setSpotData([]);
+    } else {
+      if (userClickBtn.userClickBtn !== "" && refNum.current === 0) {
         setSpotData(data.json);
+      } else if (userClickBtn.userClickBtn === "" && refNum.current === 0) {
+        setSpotData(data.json);
+      } else {
+        setSpotData([...spotData, ...data.json]);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
+    refNum.current = 0;
     start();
   }, [userClickBtn]);
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = async () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      refNum.current = refNum.current + 1;
+      start();
+    }
+  };
+
+  useEffect(() => {
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   return (
     <SectionContainer>
       {spotData.map((item: any, i: any) => {
         return (
-          <ImgConainter href={`/spot/info/${item.contentsid}`} key={item.contentsid}>
-              <Img src={item.imgpath}></Img>
-              <ImgText>
-                <TextHeader>
-                  <TextTitle>{item.title}</TextTitle>
-                  <TextLike>
-                    <FontAwesomeIcon
-                      icon={faHeart}
-                      style={{ marginRight: "5px", color: "pink" }}
-                    />
-                    {item.likeNum}
-                  </TextLike>
-                </TextHeader>
-                <TextCategory>{item.contentslabel}</TextCategory>
-                <TextAddr>{item.address}</TextAddr>
-              </ImgText>
+          <ImgConainter href={`/spot/info/${item.contentsid}`} key={i}>
+            <Img src={item.imgpath}></Img>
+            <ImgText>
+              <TextHeader>
+                <TextTitle>{item.title}</TextTitle>
+                <TextLike>
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    style={{ marginRight: "5px", color: "pink" }}
+                  />
+                  {item.likeNum}
+                </TextLike>
+              </TextHeader>
+              <TextCategory>{item.contentslabel}</TextCategory>
+              <TextAddr>{item.address}</TextAddr>
+            </ImgText>
           </ImgConainter>
         );
       })}

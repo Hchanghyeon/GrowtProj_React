@@ -204,20 +204,29 @@ const SectionSpotInfo = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    const initMap = () => {
-      const map = new naver.maps.Map("map", {
-        center: new naver.maps.LatLng(33.35, 126.54039),
-        zoom: 9,
-      });
-    };
-    initMap();
-
     const getSpotInfoDataFunc = async () => {
       const spotInfoData = await getSpotInfoData(id);
-      setSpotData(spotInfoData.json);
+      setSpotData(spotInfoData.json[0]);
     };
     getSpotInfoDataFunc();
   }, []);
+
+  useEffect(() => {
+    const initMap = () => {
+      const map = new naver.maps.Map("map", {
+        center: new naver.maps.LatLng(spotData.latitude, spotData.longitude),
+        zoom: 16,
+      });
+
+
+      let marker = new naver.maps.Marker({
+        map: map,
+        position:new naver.maps.LatLng(spotData.latitude, spotData.longitude),
+    })
+    };
+    initMap();
+  },[spotData]);
+
   console.log(spotData);
   return (
     <SectionContainer>
@@ -250,8 +259,7 @@ const SectionSpotInfo = () => {
               </SpotCategoryContent>
               <SpotTag>관련 태그</SpotTag>
               <SpotTagContent>
-                {spotData.tag
-                }
+                {spotData.tag}
               </SpotTagContent>
               <SpotAddress>주소</SpotAddress>
               <SpotAddressContent>

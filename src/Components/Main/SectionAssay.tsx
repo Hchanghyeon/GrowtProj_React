@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -89,20 +89,51 @@ const TextLike = styled.div``;
 
 const SectionAssay = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
+  const refNum: any = useRef(0);
+
+  const start: any = async () => {
+    let data: any;
+      data = await fetchSpot.getCategorySpotData(
+        userClickBtn.userClickBtn,
+        refNum.current
+      );
+    if (data.status === false) {
+      setSpotData([]);
+    } else {
+      setSpotData([...spotData, ...data.json]);
+    }
+  };
 
   useEffect(() => {
-    const start:any = async () =>{
-      const data:any = await fetchSpot.getSpotData(userClickBtn.userClickBtn);
-      setSpotData(data.json);
-    }
+    refNum.current = 0;
     start();
   }, [userClickBtn]);
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = async () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight) {
+      refNum.current = refNum.current + 1;
+      start();
+    }
+  };
+
+  useEffect(() => {
+    // scroll event listener 등록
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      // scroll event listener 해제
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
 
   return (
     <SectionContainer>
       {spotData.map((item, i) => {
         return (
-          <ImgConainter key={item._id}>
+          <ImgConainter key={i}>
             <Img src={`${BASE_URL}${item.imgpath}`}></Img>
             <ImgText>
               <TextHeader>

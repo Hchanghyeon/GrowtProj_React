@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,8 +8,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
 
-
 const NaverMap = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
   height: calc(100vh - 182px);
   width: 100%;
   @media screen and (max-width: 768px) {
@@ -31,8 +33,8 @@ const DivContainer = styled.a`
   opacity: 0;
   border-radius: 20px;
   transition-duration: 0.5s;
-  text-decoration:none;
-  color:black;
+  text-decoration: none;
+  color: black;
   @media screen and (max-width: 768px) {
     bottom: 50px;
   }
@@ -117,9 +119,63 @@ const LocationBtn = styled.button`
   }
 `;
 
+const MapHeader = styled.div`
+display:flex;
+justify-content:center;
+align-items:center;
+  position: absolute;
+  width: 300px;
+  height: 50px;
+  margin: 0 auto;
+  top: 200px;
+  border-style: none;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: pointer;
+  border-radius: 2px;
+  z-index: 100;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
+`;
+
+const MoreBtn = styled.button`
+  width: 100px;
+  height: 50px;
+  background-color: white;
+  border-style: none;
+  border-right-style: solid;
+  border-right-color: silver;
+  border-right-width: 1px;
+  cursor: pointer;
+  z-index: 100;
+`;
+
+const MoreDiv = styled.div`
+display:flex;
+justify-content:center;
+align-items:center;
+  width:190px;
+  height:50px;
+  font-size:14px;
+  font-weight:bold;
+`
+
+const MoreImg = styled.img`
+  width:20px; 
+  height:20px;
+  margin-left:5px;
+`
+
 const Map = (userClickBtn: any) => {
   const [userCurrentLocation, setUserCurrentLocation] =
     useState<boolean>(false);
+  const refNum: any = useRef(0);
+  const forestNum: any = useRef(0);
+  const homeNum: any = useRef(0);
+  const foodNum: any =useRef(0);
+  const spotData: any = useRef([]);
+  const assayNum: any =useRef(0);
 
   let map: any = null;
   let marker: any;
@@ -160,7 +216,7 @@ const Map = (userClickBtn: any) => {
     mapBtn.style.opacity = 0;
   }
 
-  useEffect(() => {
+  function go() {
     const initMap = () => {
       map = new naver.maps.Map("map", {
         center: new naver.maps.LatLng(33.35, 126.54039),
@@ -168,16 +224,73 @@ const Map = (userClickBtn: any) => {
       });
     };
     initMap();
-    let data: any;
-
     const start: any = async () => {
-      data = await fetchSpot.getSpotData(userClickBtn.userClickBtn);
-      const result:any = data.json;
+      let data: any;
+      if(spotData.current.length > 180){
+         alert('200개 이상 요청시 버벅거림으로 초기화 후 검색되지 않았던 다른 리스트를 출력합니다');
+         spotData.current = [];
+      }
+      if (userClickBtn.userClickBtn === "") {
+        data = await fetchSpot.getSpotData(refNum.current);
+        spotData.current = [...spotData.current, ...data.json];
+        forestNum.current = 0;
+        homeNum.current =0;
+        foodNum.current =0;
+        spotData.current.map((item:any) => {
+          if(item.contentsvalue === 'c1'){
+            forestNum.current = forestNum.current + 1;
+          } else if(item.contentsvalue ==='c3'){
+            homeNum.current = homeNum.current + 1;
+          } else if(item.contentsvalue ==='c4'){
+            foodNum.current = foodNum.current + 1;
+          }
+        })
+      } else {
+        data = await fetchSpot.getCategorySpotData(
+          userClickBtn.userClickBtn,
+          refNum.current
+        );
+        if(data.json.length === 0){
+          alert('요청한 데이터가 전부입니다. 처음데이터로 돌아갑니다');
+          refNum.current = 0;
+          spotData.current = [];
+          go();
+        }
+        spotData.current = [...spotData.current, ...data.json];
+        forestNum.current = 0;
+        homeNum.current =0;
+        foodNum.current =0;
+        assayNum.current=0;
+        spotData.current.map((item:any) => {
+          if(item.contentsvalue === 'c1'){
+            forestNum.current = forestNum.current + 1;
+          } else if(item.contentsvalue ==='c3'){
+            homeNum.current = homeNum.current + 1;
+          } else if(item.contentsvalue ==='c4'){
+            foodNum.current = foodNum.current + 1;
+          } else {
+            assayNum.current = assayNum.current + 1;
+          }
+        })
+      }
+
+      const food: any = document.getElementById("food2");
+      const home: any = document.getElementById("home");
+      const forest: any = document.getElementById("forest");
+      const assay: any = document.getElementById("assay2");
+
+      food.innerHTML = foodNum.current;
+      home.innerHTML = homeNum.current;
+      forest.innerHTML = forestNum.current;
+      assay.innerHTML = assayNum.current;
+
+
+      const result: any = spotData.current;
       for (let i = 0; i < result.length; i++) {
         let longitude = result[i].longitude;
         let latitude = result[i].latitude;
         let contentsValue = result[i].contentsvalue;
-  
+
         //관광지
         if (contentsValue === "c1") {
           marker = new naver.maps.Marker({
@@ -232,7 +345,7 @@ const Map = (userClickBtn: any) => {
             },
           });
         }
-  
+
         if (userClickBtn.userClickBtn === "assay") {
           const imgsrc: any = document.getElementById("srcimg");
           const mapBtn: any = document.getElementById("clickMapBtn");
@@ -275,7 +388,7 @@ const Map = (userClickBtn: any) => {
             spotTitle.innerHTML = result[i].title;
             spotIntro.innerHTML = result[i].address;
             like.innerHTML = result[i].likeNum;
-            mapBtn.href= `/spot/info/${result[i].contentsid}`;
+            mapBtn.href = `/spot/info/${result[i].contentsid}`;
             mapBtn.style.visibility = "visible";
             mapBtn.style.opacity = 1;
             if (marker.getAnimation() !== null) {
@@ -288,13 +401,31 @@ const Map = (userClickBtn: any) => {
       }
     };
     start();
-  
+  }
+
+  useEffect(() => {
+    spotData.current = [];
+    refNum.current = 0;
+    forestNum.current = 0;
+    homeNum.current =0;
+    foodNum.current =0;
+    assayNum.current =0;
+    go();
   }, [userClickBtn]);
+
+  function moreData() {
+    refNum.current = refNum.current + 1;
+    go();
+  }
 
   return (
     <>
       <NaverMap id="map"></NaverMap>
-      <DivContainer id="clickMapBtn" >
+      <MapHeader>
+        <MoreBtn onClick={moreData}>더보기</MoreBtn>
+      <MoreDiv><MoreImg src="/img/forest.png"/><span id="forest"></span> <MoreImg src="/img/fast-food.png"/><span id="food2"></span><MoreImg src="/img/home.png"/><span id="home"></span><MoreImg src="/img/travel.png"/><span id="assay2"></span></MoreDiv> 
+      </MapHeader>
+      <DivContainer id="clickMapBtn">
         <ImgContainer>
           <Img id="srcimg" src="" />
           <XBtn onClick={closeModal}>
