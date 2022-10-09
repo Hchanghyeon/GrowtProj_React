@@ -11,18 +11,17 @@ import * as fetchSpot from "../../API/Spot/Spot";
 const NaverMap = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
   height: calc(100vh - 182px);
   width: 100%;
   @media screen and (max-width: 768px) {
-    height: calc(100vh - 300px);
+    height: calc(100vh - 320px);
   }
   @media screen and (max-width: 468px) {
-    height: calc(100vh - 380px);
+    height: calc(100vh - 320px);
   }
 `;
 
-const DivContainer = styled.a`
+const DivContainer = styled.div`
   position: absolute;
   visibility: hidden;
   z-index: 30;
@@ -72,20 +71,24 @@ const ImgOn = styled.div`
   display: flex;
 `;
 
-const Text = styled.div`
+const Text = styled.a`
   width: 90%;
   height: 70px;
   padding-top: 5px;
   margin: 0px auto;
+  text-decoration:none;
+  color:black;
 `;
 
 const Div = styled.div`
   font-weight: bold;
   font-size: 12px;
+  padding-left:5px;
 `;
 
 const Div2 = styled.div`
   font-size: 11px;
+  padding-left:5px;
 `;
 
 const Span = styled.div`
@@ -134,9 +137,6 @@ align-items:center;
   cursor: pointer;
   border-radius: 2px;
   z-index: 100;
-  @media screen and (max-width: 768px) {
-    width: 90%;
-  }
 `;
 
 const MoreBtn = styled.button`
@@ -351,6 +351,7 @@ const Map = (userClickBtn: any) => {
           const mapBtn: any = document.getElementById("clickMapBtn");
           const spotTitle: any = document.getElementById("spotTitle");
           const spotIntro: any = document.getElementById("spotIntro");
+          const alink:any = document.getElementById("alink");
           const like: any = document.getElementById("like");
           mapBtn.style.visibility = "hidden";
           mapBtn.style.opacity = 0;
@@ -376,6 +377,7 @@ const Map = (userClickBtn: any) => {
           const mapBtn: any = document.getElementById("clickMapBtn");
           const spotTitle: any = document.getElementById("spotTitle");
           const spotIntro: any = document.getElementById("spotIntro");
+          const alink:any = document.getElementById("alink");
           const like: any = document.getElementById("like");
           mapBtn.style.visibility = "hidden";
           mapBtn.style.opacity = 0;
@@ -388,7 +390,7 @@ const Map = (userClickBtn: any) => {
             spotTitle.innerHTML = result[i].title;
             spotIntro.innerHTML = result[i].address;
             like.innerHTML = result[i].likeNum;
-            mapBtn.href = `/spot/info/${result[i].contentsid}`;
+            alink.href = `/spot/info/${result[i].contentsid}`;
             mapBtn.style.visibility = "visible";
             mapBtn.style.opacity = 1;
             if (marker.getAnimation() !== null) {
@@ -442,7 +444,7 @@ const Map = (userClickBtn: any) => {
             <Span id="like"></Span>
           </ImgOn>
         </ImgContainer>
-        <Text>
+        <Text id="alink">
           <Div id="spotTitle"></Div>
           <Div2 id="spotIntro"></Div2>
         </Text>

@@ -12,6 +12,17 @@ export const sendEmail = async (credentials:any) => {
     return await response("user/sendEmail", option);
 }
 
+export const getUserInfo = async (credentials:any) => {
+    const option = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+        body: JSON.stringify(credentials)
+    };
+    return await response("user/info", option);
+}
+
 
 export const checkUser = async (credentials:any) => {
     const option = {

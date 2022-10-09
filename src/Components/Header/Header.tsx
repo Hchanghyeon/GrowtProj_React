@@ -138,6 +138,7 @@ const UserLoginImg = styled.img`
 
 function Header({ changeLoginState }: any) {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
+
   const userLoginImg = useSelector((state: any) => state.user.imgSrc);
   const dispatch = useDispatch();
 
@@ -182,11 +183,11 @@ function Header({ changeLoginState }: any) {
               <a onClick={logout}>
                 <MenuLi>로그아웃</MenuLi>
               </a>
-              <MenuLi>내정보</MenuLi>
+              <a href="/user/myPage/"><MenuLi>내정보</MenuLi></a>
               <hr />
               <a href="/"><MenuLi>홈</MenuLi></a>
               <MenuLi>여행일지</MenuLi>
-              <MenuLi>나의 여행일지</MenuLi>
+              <a href="/user/myAssay/"><MenuLi>나의 여행일지</MenuLi></a>
             </MenuUl>
           ) : (
             <MenuUl>

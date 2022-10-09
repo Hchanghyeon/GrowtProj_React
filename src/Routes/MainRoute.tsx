@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "../Pages/MainPage";
+import MyAssay from "../Pages/MyAssay";
 import MyPage from "../Pages/MyPage";
 import SearchPage from "../Pages/SearchPage";
 import SpotInfoPage from "../Pages/SpotInfoPage";
@@ -43,7 +44,17 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
             userLoginBtn={userLoginBtn}
           />
         }
+        
       />
+                  <Route
+        path="/user/myAssay/*"
+        element={
+          <MyAssay
+            changeLoginState={changeLoginState}
+            userLoginBtn={userLoginBtn}
+          />
+        }
+        />
     </Routes>
   );
 };
