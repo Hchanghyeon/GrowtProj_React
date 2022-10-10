@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Background = styled.div`
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   top: 0;
   left: 0;
@@ -17,6 +17,7 @@ const Background = styled.div`
 `;
 
 const LoadingText = styled.div`
+width:100%;
   position:absolute;
   bottom:60px;
   font: 1rem;

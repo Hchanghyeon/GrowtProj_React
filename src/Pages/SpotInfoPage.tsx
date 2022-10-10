@@ -5,7 +5,7 @@ import Header from "../Components/Header/Header";
 import { Container } from "../Styles/theme";
 import LoginModal from "../Components/User/LoginModal";
 import SectionSpotInfo from "../Components/Spot/SectionSpotInfo";
-import { Routes, Route, useParams } from 'react-router-dom';
+
 
 
 const SpotInfoPage = ({ userLoginBtn, changeLoginState}: any) => {

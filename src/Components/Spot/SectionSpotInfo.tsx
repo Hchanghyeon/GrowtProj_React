@@ -227,7 +227,6 @@ const SectionSpotInfo = () => {
     initMap();
   },[spotData]);
 
-  console.log(spotData);
   return (
     <SectionContainer>
       <SpotInfoContainer>
