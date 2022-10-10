@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { BASE_URL } from "../API/Common";
 import { getUserInfo } from "../API/User/User";
 import { getUserAssay } from "../API/Assay/Assay";
+import Loading from "../Components/Loading/Loading";
 
 const Atag = styled.a`
   position: absolute;
@@ -95,10 +96,16 @@ const MyAssay = ({ userLoginBtn, changeLoginState }: any) => {
   const accessToken = useSelector((state: any) => state.user.accessToken);
 
   const [userData, setUserData] = useState<any>({});
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
   const logout = () => {
+    setLoading(true);
     dispatch(DELETE_USER());
+    setTimeout(() => {
+      location.href="/";
+      setLoading(false);
+    },2000);
   };
 
   useEffect(() => {
@@ -107,7 +114,6 @@ const MyAssay = ({ userLoginBtn, changeLoginState }: any) => {
       setUserData(data.json.data);
       const result = await getUserAssay({ userId });
       setUserAssay(result.json.data);
-      console.log(result.json.data);
     };
     getUser();
   }, []);
@@ -130,8 +136,8 @@ const MyAssay = ({ userLoginBtn, changeLoginState }: any) => {
         )}
       </HeaderContainer>
       <CenterContainer>
-        {userAssay.map((item: any) => {
-          return <AssayImg src={`${BASE_URL}${item.imgpath}`}/>
+        {userAssay.map((item: any, i:any) => {
+          return <AssayImg key={i} src={`${BASE_URL}${item.imgpath}`}/>
         })}
       </CenterContainer>
       <Footer link={"myPage"} />
@@ -139,6 +145,7 @@ const MyAssay = ({ userLoginBtn, changeLoginState }: any) => {
         changeLoginState={changeLoginState}
         userLoginBtn={userLoginBtn}
       ></LoginModal>
+      {loading ? <Loading text="로그아웃중입니다"/> : null}
     </Container>
   );
 };

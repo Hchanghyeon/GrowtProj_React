@@ -10,6 +10,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { BASE_URL } from "../../API/Common";
+import Loading from "../Loading/Loading";
 
 const HeaderMain = styled.div`
   height: 80px;
@@ -138,7 +139,7 @@ const UserLoginImg = styled.img`
 
 function Header({ changeLoginState }: any) {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
-
+  const [loading, setLoading] = useState(false);
   const userLoginImg = useSelector((state: any) => state.user.imgSrc);
   const dispatch = useDispatch();
 
@@ -153,7 +154,12 @@ function Header({ changeLoginState }: any) {
   };
 
   const logout = () => {
+    setLoading(true);
     dispatch(DELETE_USER());
+    setTimeout(() => {
+      location.href="/";
+      setLoading(false);
+    },1000);
   };
 
   return (
@@ -203,6 +209,7 @@ function Header({ changeLoginState }: any) {
           )}
         </MenuBtn>
       </HeaderRight>
+      {loading ? <Loading text="로그아웃중입니다"/> : null}
     </HeaderMain>
   );
 }

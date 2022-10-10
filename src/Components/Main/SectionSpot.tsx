@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
+import Loading from "../Loading/Loading";
+import LoadingSpot from "../Loading/LoadingSpot";
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -91,6 +93,7 @@ const TextLike = styled.div``;
 const SectionSpot = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
   const refNum: any = useRef(0);
+  const [loading, setLoading] = useState(true);
 
   const start: any = async () => {
     let data: any;
@@ -113,6 +116,8 @@ const SectionSpot = (userClickBtn: any) => {
         setSpotData([...spotData, ...data.json]);
       }
     }
+    console.log('동작');
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -126,8 +131,9 @@ const SectionSpot = (userClickBtn: any) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight) {
+      setLoading(true);
       refNum.current = refNum.current + 1;
-      start();
+      setTimeout(() => {start()},500);
     }
   };
 
@@ -163,6 +169,9 @@ const SectionSpot = (userClickBtn: any) => {
           </ImgConainter>
         );
       })}
+      {
+        loading ? <LoadingSpot text="로딩중입니다"/> : null
+      }
     </SectionContainer>
   );
 };

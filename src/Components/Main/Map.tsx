@@ -136,7 +136,7 @@ align-items:center;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
   border-radius: 2px;
-  z-index: 100;
+  z-index: 4;
 `;
 
 const MoreBtn = styled.button`
@@ -148,7 +148,7 @@ const MoreBtn = styled.button`
   border-right-color: silver;
   border-right-width: 1px;
   cursor: pointer;
-  z-index: 100;
+  z-index: 4;
 `;
 
 const MoreDiv = styled.div`

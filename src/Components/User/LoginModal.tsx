@@ -6,6 +6,8 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
 const LoginModalContainer = styled.div`
+
+  z-index:100;
   .open {
     justify-content: center;
     align-items: center;

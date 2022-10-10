@@ -85,6 +85,9 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   const dispatch = useDispatch();
   const logout = () => {
     dispatch(DELETE_USER());
+    setTimeout(() => {
+      location.href="/";
+    },200);
   };
 
 
