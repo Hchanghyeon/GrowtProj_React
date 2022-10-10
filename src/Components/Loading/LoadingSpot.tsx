@@ -26,8 +26,7 @@ const LoadingText = styled.div`
 
 const LoadingImg = styled.img`
 position:absolute;
-bottom:20px;
-font: 1rem;
+bottom:10px;
 text-align: center;     
 `
 
@@ -35,7 +34,7 @@ const LoadingSpot = ({text}:any) => {
   return (
     <Background>
       <LoadingText>{text}</LoadingText>
-      <LoadingImg src={Spinner} alt="로딩중" width="5%" />
+      <LoadingImg src={Spinner} alt="로딩중" width="70px" />
     </Background>
   );
 };

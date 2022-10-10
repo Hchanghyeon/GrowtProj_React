@@ -93,7 +93,7 @@ const TextLike = styled.div``;
 const SectionSpot = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
   const refNum: any = useRef(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const start: any = async () => {
     let data: any;

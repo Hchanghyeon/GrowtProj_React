@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Loading from "./Components/Loading/Loading";
 import MainRoute from "./Routes/MainRoute";
 import SearchRoute from "./Routes/SearchRoute";
 import UserRoute from "./Routes/UserRoute";
@@ -12,7 +13,10 @@ function App() {
 
   return (
     <>
-      <MainRoute changeLoginState={changeLoginState} userLoginBtn={userLoginBtn}></MainRoute>
+      <MainRoute
+        changeLoginState={changeLoginState}
+        userLoginBtn={userLoginBtn}
+      ></MainRoute>
     </>
   );
 }
