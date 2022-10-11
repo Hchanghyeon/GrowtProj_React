@@ -18,6 +18,14 @@ const Atag = styled.a`
   color: silver;
 `;
 
+const AtagMyAssay = styled.a`
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  cursor: pointer;
+  color: silver;
+`;
+
 const Img = styled.img`
   width: 200px;
   height: 200px;
@@ -95,6 +103,10 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
     }, 200);
   };
 
+  const goMyAssay = () => {
+    location.href="/user/myAssay";
+  }
+
   useEffect(() => {
     const getUser = async () => {
       const data = await getUserInfo({ userId, accessToken });
@@ -116,6 +128,7 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
               <Lv>Lv. 20 </Lv>
             </UserContainer>
             <Atag onClick={logout}>로그아웃</Atag>
+            <AtagMyAssay onClick={goMyAssay}>나의 여행일지</AtagMyAssay>
             </HeaderContainer>
         ) : (
           <NoLoginHeaderContainer>

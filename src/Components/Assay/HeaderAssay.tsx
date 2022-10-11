@@ -77,7 +77,7 @@ position:relative;
 `;
 
 
-const HeaderAssay = ({ userLoginBtn, changeLoginState }: any) => {
+const HeaderAssay = ({setUserMatch, userLoginBtn, changeLoginState }: any) => {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
   const userId = useSelector((state: any) => state.user.userId);
   const userLoginImg = useSelector((state: any) => state.user.imgSrc);
@@ -107,6 +107,10 @@ const HeaderAssay = ({ userLoginBtn, changeLoginState }: any) => {
       let countLike = 0;
       setUserAssay(result.json.data);
       setAssayCount(result.json.data.length);
+
+      if(data.json.data.userId === userId){
+        setUserMatch(true);
+      }
       for(let i=0; i < result.json.data.length; i++){
         countLike += parseInt(result.json.data[i].likeNum);
       }
