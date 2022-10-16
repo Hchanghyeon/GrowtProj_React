@@ -258,7 +258,9 @@ const SectionSpotInfo = () => {
               </SpotCategoryContent>
               <SpotTag>관련 태그</SpotTag>
               <SpotTagContent>
-                {spotData.tag}
+                {spotData.tag && spotData.tag.map((item:any) => {
+                  return `#${item} `
+                })}
               </SpotTagContent>
               <SpotAddress>주소</SpotAddress>
               <SpotAddressContent>
