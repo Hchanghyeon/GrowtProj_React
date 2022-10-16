@@ -9,8 +9,6 @@ import { getUserInfo } from "../../API/User/User";
 import Loading from "../Loading/Loading";
 import HeaderAssayUserInfo from "./HeaderAssayUserInfo";
 
-
-
 const Atag = styled.a`
   position: absolute;
   top: 10px;
@@ -58,7 +56,7 @@ const UserName = styled.div``;
 const Lv = styled.div``;
 
 const HeaderContainer = styled.div`
-position:relative;
+  position: relative;
   margin-top: 30px;
   display: flex;
   width: 90%;
@@ -71,13 +69,12 @@ position:relative;
   border-bottom-width: 2px;
 
   @media screen and (max-width: 768px) {
-   max-width:400px;
-   width:90%;
+    max-width: 400px;
+    width: 90%;
   }
 `;
 
-
-const HeaderAssay = ({setUserMatch, userLoginBtn, changeLoginState }: any) => {
+const HeaderAssay = ({ setUserMatch, userLoginBtn, changeLoginState }: any) => {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
   const userId = useSelector((state: any) => state.user.userId);
   const userLoginImg = useSelector((state: any) => state.user.imgSrc);
@@ -101,21 +98,26 @@ const HeaderAssay = ({setUserMatch, userLoginBtn, changeLoginState }: any) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const data = await getUserInfo({ userId, accessToken });
-      setUserData(data.json.data);
-      const result = await getUserAssay({ userId });
-      let countLike = 0;
-      setUserAssay(result.json.data);
-      setAssayCount(result.json.data.length);
+      const data: any = await getUserInfo({ userId, accessToken });
+      if (data.code === 401) {
+        logout();
+      } else {
+        setUserData(data.json.data);
+        const result = await getUserAssay({ userId });
+        let countLike = 0;
+        setUserAssay(result.json.data);
+        setAssayCount(result.json.data.length);
 
-      if(data.json.data.userId === userId){
-        setUserMatch(true);
+        if (data.json.data.userId === userId) {
+          setUserMatch(true);
+        }
+        for (let i = 0; i < result.json.data.length; i++) {
+          countLike += parseInt(result.json.data[i].likeNum);
+        }
+        setAssayLikeCount(countLike);
       }
-      for(let i=0; i < result.json.data.length; i++){
-        countLike += parseInt(result.json.data[i].likeNum);
-      }
-      setAssayLikeCount(countLike);
     };
+
     getUser();
   }, []);
 
@@ -133,10 +135,12 @@ const HeaderAssay = ({setUserMatch, userLoginBtn, changeLoginState }: any) => {
       ) : (
         <Atag onClick={changeLoginState}>로그인</Atag>
       )}
-      <HeaderAssayUserInfo assayLikeCount={assayLikeCount} assayCount={assayCount} />
-      {loading ? <Loading text="로그아웃중입니다"/> : null}
+      <HeaderAssayUserInfo
+        assayLikeCount={assayLikeCount}
+        assayCount={assayCount}
+      />
+      {loading ? <Loading text="로그아웃중입니다" /> : null}
     </HeaderContainer>
-    
   );
 };
 export default HeaderAssay;

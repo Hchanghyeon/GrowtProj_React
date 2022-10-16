@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import DaumPostcode from "react-daum-postcode";
+import { postAssay } from "../../API/Assay/Assay";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const AssayForm = styled.div`
   margin-top: 30px;
@@ -10,6 +14,13 @@ const AssayForm = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  padding-bottom: 200px;
+
+  .post {
+    max-width: 400px;
+    width: 100%;
+  }
 `;
 
 const ImgContainer = styled.div`
@@ -28,9 +39,9 @@ const ImgContainer = styled.div`
 const Img = styled.div`
   width: 100%;
   height: 100%;
-  text-align:center;
+  text-align: center;
   background-size: 100% 100%;
-  line-height:300px;
+  line-height: 300px;
 `;
 
 const ImgPlusBtn = styled.button`
@@ -112,8 +123,8 @@ const TagData = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top:5px;
-  margin-right:5px;
+  margin-top: 5px;
+  margin-right: 5px;
 
   span {
     font-size: 13px;
@@ -129,13 +140,72 @@ const TagAddBtn = styled.button`
   }
 `;
 
-const AssayAdd = ({clickedAddBtn}:any) => {
+const Input = styled.input`
+  max-width: 380px;
+  width: 100%;
+  height: 50px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  margin: 5px 0px;
+  padding: 0px;
+  padding-left: 10px;
+  border-color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+const InputHeader = styled.div`
+  max-width: 380px;
+  width: 100%;
+  margin-top: 10px;
+`;
+
+const InputButton = styled.button`
+  max-width: 400px;
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  background-color: #83b551;
+  border-style: none;
+  color: white;
+  border-radius: 5px;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+  cursor: pointer;
+`;
+
+const CheckButton = styled.button`
+  max-width: 400px;
+  width: 100%;
+  height: 50px;
+  margin-top: 10px;
+  background-color: white;
+  border-style: solid;
+  border-color: #83b551;
+  border-width: 1px;
+  color: #83b551;
+  border-radius: 5px;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
+  cursor: pointer;
+`;
+
+const AssayAdd = ({ clickedAddBtn }: any) => {
   const [files, setFiles] = useState<any>("");
   const [title, setTitle] = useState("");
   const [introduction, setIntroduction] = useState("");
+  const userId = useSelector((state: any) => state.user.userId);
   const [textExplain, setTextExplain] = useState("이미지를 넣어주세요");
   const [tagArr, setTagArr] = useState<String[]>([]);
   const [tag, setTag] = useState("");
+  const [userAddr1, setUserAddr1] = useState("");
+  const [userAddr2, setUserAddr2] = useState("");
+  const [openPostcode, setOpenPostcode] = useState<boolean>(false);
+  const [addPostcode, setAddPostcode] = useState<boolean>(false);
 
   const onLoadFile = (e: any) => {
     const file = e.target.files;
@@ -148,31 +218,27 @@ const AssayAdd = ({clickedAddBtn}:any) => {
 
   useEffect((): any => {
     preview();
-  },[files]);
+  }, [files]);
 
-  useEffect(():any => {
-    
-  },[clickedAddBtn])
+  useEffect((): any => {}, [clickedAddBtn]);
 
   const preview = () => {
     if (!files) return false;
-
     const imgEL: any = document.querySelector(".img_box");
     const reader = new FileReader();
-
     reader.onload = () => {
-        setTextExplain('');
+      setTextExplain("");
       imgEL.style.backgroundImage = `url(${reader.result})`;
     };
     reader.readAsDataURL(files[0]);
   };
 
   const handleInputTag = (e: any) => {
-    if(e.target.value.length >= 10){
-        e.target.value = e.target.value.substring(0,9);
-        return alert('열글자를 넘기면 안됩니다');
-    }else {
-        setTag(`#${e.target.value}`);
+    if (e.target.value.length >= 10) {
+      e.target.value = e.target.value.substring(0, 9);
+      return alert("열글자를 넘기면 안됩니다");
+    } else {
+      setTag(`#${e.target.value}`);
     }
   };
 
@@ -185,10 +251,73 @@ const AssayAdd = ({clickedAddBtn}:any) => {
         return alert("이미 입력된 해쉬태그입니다");
       }
     }
-    if(tagArr.length >= 10){
-        return alert("태그는 10개까지만 입력할 수 있습니다");
+    if (tagArr.length >= 10) {
+      return alert("태그는 10개까지만 입력할 수 있습니다");
     }
     setTagArr([...tagArr, tag]);
+  };
+
+  const onChangeUserAddr1 = (e: any) => {
+    setUserAddr1(e.target.value);
+  };
+
+  const onChangeUserAddr2 = (e: any) => {
+    setUserAddr2(e.target.value);
+  };
+
+  const handleTitle = (e: any) => {
+    setTitle(e.target.value);
+  };
+
+  const handleText = (e: any) => {
+    setIntroduction(e.target.value);
+  };
+
+  const handle = {
+    // 버튼 클릭 이벤트
+    clickButton: () => {
+      setOpenPostcode((current) => !current);
+      setAddPostcode(false);
+    },
+
+    // 주소 선택 이벤트
+    selectAddress: (data: any) => {
+      setUserAddr1(data.address);
+      setAddPostcode(true);
+      setOpenPostcode(false);
+    },
+  };
+
+  const submitData = async () => {
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    formData.append("userId", userId);
+    formData.append("title", title);
+    formData.append("address", userAddr1);
+    formData.append("tag", JSON.stringify(tagArr));
+    formData.append("introduction", introduction);
+
+    let test: any;
+    let result: any;
+    let error:boolean = false;
+    try {
+      test = await axios.post("http://localhost:3001/assay/post", formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      });
+      result = test.response;
+    } catch (err) {
+      error = true;
+      alert(
+        "위경도 변환에 사용될 수 없는 주소입니다. 가까운 다른 주소를 입력해주세요"
+      );
+    }
+
+    if (!error) {
+        alert("파일 저장에 성공했습니다.");
+        location.href = "/user/myAssay";
+    }
   };
 
   return (
@@ -196,14 +325,21 @@ const AssayAdd = ({clickedAddBtn}:any) => {
       <ImgContainer>
         <Img className="img_box">{textExplain}</Img>
       </ImgContainer>
-      <InputFile type="file" id="image" accept="img/*" onChange={onLoadFile} />
+      <InputFile type="file" id="image" onChange={onLoadFile} />
       <ImgPlusBtn>
         <label htmlFor="image">
           <FontAwesomeIcon id="plus" icon={faPlusCircle} />
         </label>
       </ImgPlusBtn>
-      <InputTitle type="text" placeholder="제목을 입력해주세요"></InputTitle>
-      <InputText placeholder="여행 기록을 해주세요"></InputText>
+      <InputTitle
+        onChange={handleTitle}
+        type="text"
+        placeholder="제목을 입력해주세요"
+      ></InputTitle>
+      <InputText
+        onChange={handleText}
+        placeholder="여행 기록을 해주세요"
+      ></InputText>
       <TagHeader>해쉬태그</TagHeader>
       <TagArray>
         <TagAddInput onChange={handleInputTag} />
@@ -220,6 +356,29 @@ const AssayAdd = ({clickedAddBtn}:any) => {
           );
         })}
       </TagArrayData>
+      <InputHeader>주소</InputHeader>
+      {addPostcode ? (
+        <>
+          <Input type="text" value={userAddr1} disabled />
+          <Input
+            type="text"
+            placeholder="상세 주소를 입력하세요"
+            onChange={onChangeUserAddr2}
+          />
+        </>
+      ) : null}
+      {openPostcode && (
+        <DaumPostcode
+          className="post"
+          onComplete={handle.selectAddress} // 값을 선택할 경우 실행되는 이벤트
+          autoClose={false} // 값을 선택할 경우 사용되는 DOM을 제거하여 자동 닫힘 설정
+          defaultQuery="동양미래대학교" // 팝업을 열때 기본적으로 입력되는 검색어
+        />
+      )}
+      <InputButton onClick={handle.clickButton}>주소 찾기</InputButton>
+      {userAddr2 !== "" ? (
+        <CheckButton onClick={submitData}>확인</CheckButton>
+      ) : null}
     </AssayForm>
   );
 };

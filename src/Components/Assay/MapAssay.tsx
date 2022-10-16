@@ -45,9 +45,7 @@ const MapAssay = () => {
             result.json.data[i].longitude
           ),
         });
-
-        console.log(result.json.data[i].latitude);
-      }
+}
     };
     initMap();
   }, []);

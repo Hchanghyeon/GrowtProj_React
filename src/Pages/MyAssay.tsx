@@ -13,7 +13,6 @@ import AssayAdd from "../Components/Assay/AssayAdd";
 const AddAssayBtnDiv = styled.div`
   position: fixed;
   bottom: 75px;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

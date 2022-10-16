@@ -9,6 +9,7 @@ const CenterContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  padding-bottom:200px;
 `;
 
 const AssayImg = styled.img`
