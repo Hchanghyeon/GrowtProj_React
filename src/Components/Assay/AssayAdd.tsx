@@ -6,6 +6,7 @@ import DaumPostcode from "react-daum-postcode";
 import { postAssay } from "../../API/Assay/Assay";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { BASE_URL } from "../../API/Common";
 
 const AssayForm = styled.div`
   margin-top: 30px;
@@ -301,7 +302,7 @@ const AssayAdd = ({ clickedAddBtn }: any) => {
     let result: any;
     let error:boolean = false;
     try {
-      test = await axios.post("http://localhost:3001/assay/post", formData, {
+      test = await axios.post(`${BASE_URL}/assay/post`, formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
