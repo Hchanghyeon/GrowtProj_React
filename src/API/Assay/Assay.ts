@@ -1,6 +1,19 @@
 import { response } from "../Common";
 
 
+export const getAllAssay = async () => {
+    const option = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+    };
+    return await response("assay/all", option);
+}
+
+
+
+
 export const getUserAssay = async (credentials:any) => {
     const option = {
         method: "POST",

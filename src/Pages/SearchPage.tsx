@@ -2,12 +2,15 @@ import React from "react";
 import { Container } from "../Styles/theme";
 import Header from "../Components/Header/Header";
 import Footer from "../Components/Footer/Footer";
+import SearchInput from "../Components/Search/SearchInput";
+import SearchResult from "../Components/Search/SearchResult";
 
 const SearchPage = ({ userLoginBtn, changeLoginState }: any) => {
   return (
     <Container>
       <Header changeLoginState={changeLoginState} userLoginBtn={userLoginBtn} />
-      검색페이지입니다.
+      <SearchInput/>
+      <SearchResult/>
       <Footer link={"search"} />
     </Container>
   );

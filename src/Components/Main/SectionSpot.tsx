@@ -116,7 +116,6 @@ const SectionSpot = (userClickBtn: any) => {
         setSpotData([...spotData, ...data.json]);
       }
     }
-    console.log('동작');
     setLoading(false);
   };
 

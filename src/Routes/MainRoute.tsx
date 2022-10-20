@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import AssayList from "../Pages/AssayList";
 import MainPage from "../Pages/MainPage";
 import MyAssay from "../Pages/MyAssay";
 import MyPage from "../Pages/MyPage";
@@ -50,6 +51,15 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
         path="/user/myAssay/*"
         element={
           <MyAssay
+            changeLoginState={changeLoginState}
+            userLoginBtn={userLoginBtn}
+          />
+        }
+        />
+                          <Route
+        path="/assay/assayList/*"
+        element={
+          <AssayList
             changeLoginState={changeLoginState}
             userLoginBtn={userLoginBtn}
           />
