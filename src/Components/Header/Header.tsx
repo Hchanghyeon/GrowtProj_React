@@ -168,7 +168,7 @@ function Header({ changeLoginState }: any) {
         <ImgLogo src="/img/GrowT_Logo.png"></ImgLogo>
       </a>
       <HeaderRight>
-        <SearchA>
+        <SearchA href="/search">
           <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
         </SearchA>
         {userLoginState ? (
@@ -192,19 +192,19 @@ function Header({ changeLoginState }: any) {
               <a href="/user/myPage/"><MenuLi>내정보</MenuLi></a>
               <hr />
               <a href="/"><MenuLi>홈</MenuLi></a>
-              <MenuLi>여행일지</MenuLi>
+              <a href="/assay/assayList"><MenuLi>여행일지</MenuLi></a>
               <a href="/user/myAssay/"><MenuLi>나의 여행일지</MenuLi></a>
+              <a href="/"><MenuLi>캐릭터 정보</MenuLi></a>
             </MenuUl>
           ) : (
             <MenuUl>
               <MenuLi>
                 <a onClick={changeLoginState}>로그인</a>
               </MenuLi>
-              <MenuLi>회원가입</MenuLi>
               <hr />
               <a href="/"><MenuLi>홈</MenuLi></a>
-              <MenuLi>여행일지</MenuLi>
-              <MenuLi>도움말</MenuLi>
+              <a href="/assay/assayList"><MenuLi>여행일지</MenuLi></a>
+              <a href="/"><MenuLi>캐릭터 정보</MenuLi></a>
             </MenuUl>
           )}
         </MenuBtn>
