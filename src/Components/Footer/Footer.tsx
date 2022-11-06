@@ -52,7 +52,7 @@ const FooterIcon = styled.a`
 const FooterItem = [
   { icon: faHouse, link: "home", go: "/" },
   { icon: faMagnifyingGlass, link: "search", go: "/search" },
-  { icon: faSuitcase, link: "spots", go: "/" },
+  { icon: faSuitcase, link: "spots", go: "/assay/assayList" },
   { icon: faMapLocationDot, link: "map", go: "/" },
   { icon: faUser, link: "myPage", go: "/user/myPage" },
 ];

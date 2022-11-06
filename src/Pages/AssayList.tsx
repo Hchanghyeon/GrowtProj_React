@@ -5,6 +5,7 @@ import { BASE_URL } from "../API/Common";
 import Footer from "../Components/Footer/Footer";
 import Header from "../Components/Header/Header";
 import { MyPageContainer } from "../Styles/theme";
+import LoginModal from "../Components/User/LoginModal";
 
 const FeedContainer = styled.div`
   max-width: 400px;
@@ -107,16 +108,16 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
     start();
   }, []);
 
+
   return (
     <MyPageContainer>
-      <Header />
+      <Header changeLoginState={changeLoginState}/>
       <FeedContainer>
         {assayData.map((item: any, i: any) => {
           return (
             <Feed key={i}>
               <FeedHeader>
                 <FeedHeaderImg src={BASE_URL + "/img/infoUserImg/user.png"} />
-
                 <FeedHeaderHeader>
                   <FeedHeaderText>
                     <span>{item.userId}</span>
@@ -140,7 +141,11 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
           );
         })}
       </FeedContainer>
-      <Footer link={"myPage"} />
+      <LoginModal
+        changeLoginState={changeLoginState}
+        userLoginBtn={userLoginBtn}
+      ></LoginModal>
+      <Footer link={"spots"} />
     </MyPageContainer>
   );
 };

@@ -115,7 +115,7 @@ const UserAssayList = ({ userLoginBtn, changeLoginState }: any) => {
           </FeedContent>
         </Feed>
       </FeedContainer>
-      <Footer link={"myPage"} />
+      <Footer link={"spots"} />
     </MyPageContainer>
   );
 };
