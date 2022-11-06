@@ -36,3 +36,5 @@ export const postAssay = async (credentials:any) => {
     };
     return await response("assay/post", option);
 }
+
+

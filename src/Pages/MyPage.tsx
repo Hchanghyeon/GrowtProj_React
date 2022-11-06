@@ -110,7 +110,9 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   useEffect(() => {
     const getUser = async () => {
       const data = await getUserInfo({ userId, accessToken });
-      console.log(data.status);
+      if(!data.status){
+        
+      }
       setUserData(data.json.data);
     };
     getUser();

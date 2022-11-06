@@ -1,3 +1,4 @@
+import { access } from "fs";
 import { response } from "../Common";
 
 export async function getSpotData(num:number) {
@@ -21,4 +22,27 @@ export async function getSpotInfoData(contentId:any) {
         method: "GET",
     }
     return await response(`spot/info/${contentId}`,option);
+}
+
+
+export const getUserLike = async (accessToken:any) => {
+    const option = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Authorization" : `Bearer ${accessToken}`
+        },
+    };
+    return await response("spot/likeall", option);
+}
+
+export const getChangeLikeState = async (contentsId:any, accessToken:any) => {
+    const option = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Authorization" : `Bearer ${accessToken}`
+        },
+    };
+    return await response(`spot/like/${contentsId}`, option);
 }

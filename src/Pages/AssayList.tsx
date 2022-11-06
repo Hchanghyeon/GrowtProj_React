@@ -6,6 +6,10 @@ import Footer from "../Components/Footer/Footer";
 import Header from "../Components/Header/Header";
 import { MyPageContainer } from "../Styles/theme";
 import LoginModal from "../Components/User/LoginModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
+import { getChangeLikeState, getUserLike } from "../API/Spot/Spot";
 
 const FeedContainer = styled.div`
   max-width: 400px;
@@ -97,21 +101,59 @@ const FeedHeaderAdd = styled.div`
   font-size: 11px;
 `;
 
+const FeedContainerHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const FeedHeaderLike = styled.div`
+  padding-right: 10px;
+  .heartIcon {
+    color: silver;
+  }
+  .heartIcon2 {
+    color: pink;
+  }
+`;
+
 const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
   const [assayData, setAssayData] = useState<any>([]);
+  const accessToken = useSelector((state: any) => state.user.accessToken);
+  const [state, setState] = useState(false);
 
   useEffect(() => {
     const start = async () => {
       const data = await getAllAssay();
+      if (accessToken) {
+        const result: any = await getUserLike(accessToken);
+
+        for (let i = 0; i < result.json.data.length; i++) {
+          for (let j = 0; j < data.json.data.length; j++) {
+            if (result.json.data[i].contentsid == data.json.data[j]._id) {
+              data.json.data[j].likeStatus = true;
+            }
+          }
+        }
+      }
       setAssayData(data.json.data);
     };
     start();
-  }, []);
+  }, [state]);
 
+  const changeLikeState: any = async (contentsId: any) => {
+    const result: any = await getChangeLikeState(contentsId, accessToken);
+    if (result.code === 401) {
+      alert("로그인이 필요합니다");
+    } else {
+      setState(!state);
+    }
+  };
 
   return (
     <MyPageContainer>
-      <Header changeLoginState={changeLoginState}/>
+      <Header changeLoginState={changeLoginState} />
       <FeedContainer>
         {assayData.map((item: any, i: any) => {
           return (
@@ -128,7 +170,34 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
               <FeedContent>
                 <FeedContentImg src={BASE_URL + item.imgpath} />
                 <FeedContentText>
-                  <FeedContentHeader>{item.title}</FeedContentHeader>
+                  <FeedContainerHeader>
+                    <FeedContentHeader>{item.title}</FeedContentHeader>
+                    <FeedHeaderLike>
+                      {item.likeStatus ? (
+                        <a
+                          onClick={() =>
+                            changeLikeState(`${item._id.toString()}`)
+                          }
+                        >
+                          <FontAwesomeIcon
+                            className="heartIcon2"
+                            icon={faHeart}
+                          />
+                        </a>
+                      ) : (
+                        <a
+                          onClick={() =>
+                            changeLikeState(`${item._id.toString()}`)
+                          }
+                        >
+                          <FontAwesomeIcon
+                            className="heartIcon"
+                            icon={faHeart}
+                          />
+                        </a>
+                      )}
+                    </FeedHeaderLike>
+                  </FeedContainerHeader>
                   <FeedContentIntro>{item.introduction}</FeedContentIntro>
                   <FeedContentHashTag>
                     {item.tag.map((item: any) => {
