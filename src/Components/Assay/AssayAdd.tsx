@@ -300,7 +300,7 @@ const AssayAdd = ({ clickedAddBtn }: any) => {
 
     let test: any;
     let result: any;
-    let error:boolean = false;
+    let error: boolean = false;
     try {
       test = await axios.post(`${BASE_URL}/assay/post`, formData, {
         headers: {
@@ -316,8 +316,8 @@ const AssayAdd = ({ clickedAddBtn }: any) => {
     }
 
     if (!error) {
-        alert("파일 저장에 성공했습니다.");
-        location.href = "/user/myAssay";
+      alert("파일 저장에 성공했습니다.");
+      window.location.href = "/user/myAssay";
     }
   };
 

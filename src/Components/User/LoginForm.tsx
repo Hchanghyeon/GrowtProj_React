@@ -1,10 +1,9 @@
-
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { config } from "../../Config/Config";
 import { signin } from "../../API/User/User";
-import { SET_USER} from "../../Store/User/User";
+import { SET_USER } from "../../Store/User/User";
 import Loading from "../Loading/Loading";
 
 const Form = styled.div`
@@ -65,16 +64,16 @@ const ValidationPassword = styled.div`
 `;
 
 const ErrorMsg = styled.div`
-  margin-top:10px;
-  font-size:14px;
-`
+  margin-top: 10px;
+  font-size: 14px;
+`;
 
-const LoginForm = ({changeLoginState}:any) => {
+const LoginForm = ({ changeLoginState }: any) => {
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [errorId, setErrorId] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
@@ -109,28 +108,28 @@ const LoginForm = ({changeLoginState}:any) => {
         userPw: userPassword,
       };
 
-      const data:any = await signin(userInfo);
-      if(data.json.message){
-        setErrorMsg('아이디 또는 비밀번호가 틀렸습니다');
+      const data: any = await signin(userInfo);
+      if (data.json.message) {
+        setErrorMsg("아이디 또는 비밀번호가 틀렸습니다");
       } else {
         const payload = {
-          accessToken : data.json.accessToken,
-          imgSrc : data.json.imgSrc,
-          userId : data.json.userId
-        }
+          accessToken: data.json.accessToken,
+          imgSrc: data.json.imgSrc,
+          userId: data.json.userId,
+        };
         dispatch(SET_USER(payload));
         changeLoginState(); // 모달 닫기
-        setErrorMsg('');
+        setErrorMsg("");
         setTimeout(() => {
-          location.href="/";
-        },1);
+          window.location.href = "/";
+        }, 1);
       }
     }
   };
 
   return (
     <Form>
-      {errorMsg !== '' ? <ErrorMsg>{errorMsg}</ErrorMsg> : null}
+      {errorMsg !== "" ? <ErrorMsg>{errorMsg}</ErrorMsg> : null}
       <InputHeader>아이디</InputHeader>
       <Input
         type="text"

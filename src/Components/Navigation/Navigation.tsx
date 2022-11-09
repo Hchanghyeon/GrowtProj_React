@@ -27,7 +27,7 @@ const NavigationBar = styled.div`
   display: flex;
   justify-content: center;
   @media screen and (max-width: 768px) {
-    height:70px;
+    height: 70px;
   }
 `;
 
@@ -76,22 +76,25 @@ const BarItem = [
   { text: "여행기록", icon: faBook, link: "assay" },
 ];
 
-function Navigation({selectCategory}:any) {
+function Navigation({ selectCategory }: any) {
   const [clicked, setClicked] = useState<string>(BarItem[0].link);
 
   useEffect(() => {
     const clickIcon = document.getElementById(clicked);
-    clickIcon ? (clickIcon.style.color = "black") : null;
-    clickIcon ? (clickIcon.style.borderBottomStyle = "solid") : null;
-    clickIcon ? (clickIcon.style.borderBottomWidth = "2px") : null;
-    clickIcon ? (clickIcon.style.paddingBottom = "5px") : null;
-    clickIcon ? (clickIcon.style.transitionDuration = "0.5s") : null;
-
+    if (clickIcon) {
+      clickIcon.style.color = "black";
+      clickIcon.style.borderBottomStyle = "solid";
+      clickIcon.style.borderBottomWidth = "2px";
+      clickIcon.style.paddingBottom = "5px";
+      clickIcon.style.transitionDuration = "0.5s";
+    }
     BarItem.filter((item) => item.link !== clicked).map((item) => {
       const nonClick = document.getElementById(item.link);
-      nonClick ? (nonClick.style.color = "#606060") : null;
-      nonClick ? (nonClick.style.borderBottomStyle = "none") : null;
-      nonClick ? (nonClick.style.paddingBottom = "0px") : null;
+      if (nonClick) {
+        nonClick.style.color = "#606060";
+        nonClick.style.borderBottomStyle = "none";
+        nonClick.style.paddingBottom = "0px";
+      }
     });
   }, [clicked]);
 

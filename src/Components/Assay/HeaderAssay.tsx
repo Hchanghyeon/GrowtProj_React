@@ -91,7 +91,7 @@ const HeaderAssay = ({ setUserMatch, userLoginBtn, changeLoginState }: any) => {
     setLoading(true);
     dispatch(DELETE_USER());
     setTimeout(() => {
-      location.href = "/";
+      window.location.href = "/";
       setLoading(false);
     }, 2000);
   };

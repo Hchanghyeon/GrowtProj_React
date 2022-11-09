@@ -1,6 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 function required(key: string, defaultValue = undefined): any {
   const value: any = process.env[key] || defaultValue;
   if (value == null) {
@@ -11,5 +8,5 @@ function required(key: string, defaultValue = undefined): any {
 export const config: any = {
   http: {
     BASE_URL: required("REACT_APP_BASE_URL"),
-  }
+  },
 };

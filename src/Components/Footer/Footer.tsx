@@ -9,8 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import { link } from "fs";
 
 const FooterContainer = styled.div`
   position: fixed;
@@ -57,17 +55,18 @@ const FooterItem = [
   { icon: faUser, link: "myPage", go: "/user/myPage" },
 ];
 
-const Footer = (link:any) => {
+const Footer = (link: any) => {
   const [clicked, setClicked] = useState<string>(link.link);
 
   useEffect(() => {
     const clickIcon = document.getElementById(clicked);
-    clickIcon ? (clickIcon.style.color = "black") : null;
-    clickIcon ? (clickIcon.style.transitionDuration = "0.5s") : null;
-
+    if (clickIcon) {
+      clickIcon.style.color = "black";
+      clickIcon.style.transitionDuration = "0.5s";
+    }
     FooterItem.filter((item) => item.link !== clicked).map((item) => {
       const nonClick = document.getElementById(item.link);
-      nonClick ? (nonClick.style.color = "silver") : null;
+      if (nonClick) nonClick.style.color = "silver";
     });
   }, [clicked]);
 
@@ -80,7 +79,12 @@ const Footer = (link:any) => {
       <FooterBox>
         {FooterItem.map((item, i) => {
           return (
-            <FooterIcon href={item.go} key={i} id={item.link} onClick={loadData}>
+            <FooterIcon
+              href={item.go}
+              key={i}
+              id={item.link}
+              onClick={loadData}
+            >
               <FontAwesomeIcon icon={item.icon}></FontAwesomeIcon>
             </FooterIcon>
           );

@@ -111,7 +111,7 @@ const MenuUl = styled.ul`
   background-color: white;
 
   a {
-    text-decoration:none;
+    text-decoration: none;
     color: #606060;
   }
 `;
@@ -157,9 +157,9 @@ function Header({ changeLoginState }: any) {
     setLoading(true);
     dispatch(DELETE_USER());
     setTimeout(() => {
-      location.href="/";
+      window.location.href = "/";
       setLoading(false);
-    },1000);
+    }, 1000);
   };
 
   return (
@@ -189,12 +189,22 @@ function Header({ changeLoginState }: any) {
               <a onClick={logout}>
                 <MenuLi>로그아웃</MenuLi>
               </a>
-              <a href="/user/myPage/"><MenuLi>내정보</MenuLi></a>
+              <a href="/user/myPage/">
+                <MenuLi>내정보</MenuLi>
+              </a>
               <hr />
-              <a href="/"><MenuLi>홈</MenuLi></a>
-              <a href="/assay/assayList"><MenuLi>여행일지</MenuLi></a>
-              <a href="/user/myAssay/"><MenuLi>나의 여행일지</MenuLi></a>
-              <a href="/"><MenuLi>캐릭터 정보</MenuLi></a>
+              <a href="/">
+                <MenuLi>홈</MenuLi>
+              </a>
+              <a href="/assay/assayList">
+                <MenuLi>여행일지</MenuLi>
+              </a>
+              <a href="/user/myAssay/">
+                <MenuLi>나의 여행일지</MenuLi>
+              </a>
+              <a href="/">
+                <MenuLi>캐릭터 정보</MenuLi>
+              </a>
             </MenuUl>
           ) : (
             <MenuUl>
@@ -202,14 +212,20 @@ function Header({ changeLoginState }: any) {
                 <a onClick={changeLoginState}>로그인</a>
               </MenuLi>
               <hr />
-              <a href="/"><MenuLi>홈</MenuLi></a>
-              <a href="/assay/assayList"><MenuLi>여행일지</MenuLi></a>
-              <a href="/"><MenuLi>캐릭터 정보</MenuLi></a>
+              <a href="/">
+                <MenuLi>홈</MenuLi>
+              </a>
+              <a href="/assay/assayList">
+                <MenuLi>여행일지</MenuLi>
+              </a>
+              <a href="/">
+                <MenuLi>캐릭터 정보</MenuLi>
+              </a>
             </MenuUl>
           )}
         </MenuBtn>
       </HeaderRight>
-      {loading ? <Loading text="로그아웃중입니다"/> : null}
+      {loading ? <Loading text="로그아웃중입니다" /> : null}
     </HeaderMain>
   );
 }

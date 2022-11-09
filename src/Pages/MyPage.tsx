@@ -86,7 +86,6 @@ const NoLoginHeaderContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-
 const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
   const userId = useSelector((state: any) => state.user.userId);
@@ -99,19 +98,18 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   const logout = () => {
     dispatch(DELETE_USER());
     setTimeout(() => {
-      location.href = "/";
+      window.location.href = "/";
     }, 200);
   };
 
   const goMyAssay = () => {
-    location.href="/user/myAssay";
-  }
+    window.location.href = "/user/myAssay";
+  };
 
   useEffect(() => {
     const getUser = async () => {
       const data = await getUserInfo({ userId, accessToken });
-      if(!data.status){
-        
+      if (!data.status) {
       }
       setUserData(data.json.data);
     };
@@ -121,23 +119,23 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   return (
     <Container>
       <Header changeLoginState={changeLoginState} userLoginBtn={userLoginBtn} />
-        {userLoginState ? (
-                <HeaderContainer>
-            <ImgContainer>
-              <Img src={`${BASE_URL}${userLoginImg}`}></Img>
-            </ImgContainer>
-            <UserContainer>
-              <UserName>{userData.userName}님</UserName>
-              <Lv>Lv. 20 </Lv>
-            </UserContainer>
-            <Atag onClick={logout}>로그아웃</Atag>
-            <AtagMyAssay onClick={goMyAssay}>나의 여행일지</AtagMyAssay>
-            </HeaderContainer>
-        ) : (
-          <NoLoginHeaderContainer>
+      {userLoginState ? (
+        <HeaderContainer>
+          <ImgContainer>
+            <Img src={`${BASE_URL}${userLoginImg}`}></Img>
+          </ImgContainer>
+          <UserContainer>
+            <UserName>{userData.userName}님</UserName>
+            <Lv>Lv. 20 </Lv>
+          </UserContainer>
+          <Atag onClick={logout}>로그아웃</Atag>
+          <AtagMyAssay onClick={goMyAssay}>나의 여행일지</AtagMyAssay>
+        </HeaderContainer>
+      ) : (
+        <NoLoginHeaderContainer>
           <Atag onClick={changeLoginState}>로그인</Atag>
-          </NoLoginHeaderContainer>
-        )}
+        </NoLoginHeaderContainer>
+      )}
       <Footer link={"myPage"} />
       <LoginModal
         changeLoginState={changeLoginState}

@@ -32,13 +32,13 @@ const InputButton = styled.button`
   @media screen and (max-width: 768px) {
     font-size: 12px;
   }
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const ErrorMsgDiv = styled.div`
   width: 100%;
-  text-align:center;
-  font-size:13px;
+  text-align: center;
+  font-size: 13px;
 `;
 
 const UserPw = ({ addUser, changeBtn }: any) => {
@@ -47,14 +47,14 @@ const UserPw = ({ addUser, changeBtn }: any) => {
   const [errMsg, setErrMsg] = useState("");
 
   const checkSamePW = () => {
-    if(userPw !== userPw2){
-        setErrMsg('비밀번호가 틀립니다');
-        return false;
+    if (userPw !== userPw2) {
+      setErrMsg("비밀번호가 틀립니다");
+      return false;
     } else {
-        setErrMsg('');
-        return true;
+      setErrMsg("");
+      return true;
     }
-  }
+  };
 
   const onChangeUserPw = (e: any) => {
     setUserPw(e.target.value);
@@ -65,19 +65,18 @@ const UserPw = ({ addUser, changeBtn }: any) => {
   };
 
   const clickBtn = () => {
-    if(userPw === "" || userPw2 === ""){
-        setErrMsg('비밀번호를 입력하세요');
+    if (userPw === "" || userPw2 === "") {
+      setErrMsg("비밀번호를 입력하세요");
     } else {
-        const result = checkSamePW();
-        if(result === true){
-            const key = 'userPw';
-            const value = userPw;
-            addUser(key, value);
-            changeBtn("UserName");
-        }
+      const result = checkSamePW();
+      if (result === true) {
+        const key = "userPw";
+        const value = userPw;
+        addUser(key, value);
+        changeBtn("UserName");
+      }
     }
   };
-0
   return (
     <>
       {errMsg !== "" ? <ErrorMsgDiv>{errMsg}</ErrorMsgDiv> : null}
