@@ -63,3 +63,15 @@ export const getUserSpotLike = async (credentials: any, accessToken: any) => {
   };
   return await response(`spot/userSpotLike/`, option);
 };
+
+export const getSpotSearch = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response(`spot/search/`, option);
+};
+

@@ -93,7 +93,7 @@ const SectionContainer = styled.div`
   width: 90%;
   height: 100%;
   justify-content: center;
-  align-items: center;
+  margin-bottom:100px;
   @media screen and (max-width: 1268px) {
     flex-wrap: wrap;
   }

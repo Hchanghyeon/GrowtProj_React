@@ -37,4 +37,15 @@ export const postAssay = async (credentials:any) => {
     return await response("assay/post", option);
 }
 
-
+export const getUserAssayLike = async (credentials: any, accessToken: any) => {
+    const option = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=UTF-8",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(credentials),
+    };
+    return await response(`assay/userAssayLike/`, option);
+  };
+  

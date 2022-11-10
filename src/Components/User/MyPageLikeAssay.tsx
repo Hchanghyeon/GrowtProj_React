@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getUserLike, getUserSpotLike } from "../../API/Spot/Spot";
+import { getUserAssayLike } from "../../API/Assay/Assay";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { BASE_URL } from "../../API/Common";
 
 const LikeContainer = styled.div`
   margin-top: 20px;
   width: 100%;
   height: 100%;
   display: flex;
+  align-items:center;
   flex-direction: column;
   @media screen and (max-width: 768px) {
     align-items: center;
@@ -26,7 +29,9 @@ const LikeSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  justify-content:center;
   height: 100%;
+  min-height:300px;
   padding-top: 30px;
   @media screen and (max-width: 768px) {
     justify-content: center;
@@ -89,16 +94,18 @@ const LikeCardA = styled.a`
   text-decoration: none;
 `;
 
+const ResultData = styled.div``;
+
 const MyPageLikeAssay = () => {
   const accessToken = useSelector((state: any) => state.user.accessToken);
-  const [spotData, setSpotData] = useState<any>([]);
+  const [assayData, setAssayData] = useState<any>([]);
 
   useEffect(() => {
     const start = async () => {
       if (accessToken) {
         const result: any = await getUserLike(accessToken);
-        const data: any = await getUserSpotLike(result.json.data, accessToken);
-        setSpotData(data.json.result);
+        const data: any = await getUserAssayLike(result.json.data, accessToken);
+        setAssayData(data.json.result);
       }
     };
     start();
@@ -107,35 +114,39 @@ const MyPageLikeAssay = () => {
   return (
     <>
       <LikeContainer>
-        <LikeHeader>내가 좋아요 누른 관광지 목록 </LikeHeader>
+        <LikeHeader>내가 좋아요 누른 여행일지 목록 </LikeHeader>
         <LikeSection>
-          {spotData.map((item: any) => {
-            return (
-              <LikeCard key={item.contentsid}>
-                <LikeCardA href={`/spot/info/${item.contentsid}`}>
-                  <LikeImgDiv>
-                    <LikeImg src={`${item.imgpath}`} />
-                  </LikeImgDiv>
-                  <LikeData>
-                    <SpotHeader>
-                      <SpotTitle>{item.title}</SpotTitle>
-                      <SpotLike>
-                        <span>
-                          <FontAwesomeIcon
-                            style={{ color: "pink", margin: "0px 3px" }}
-                            icon={faHeart}
-                          ></FontAwesomeIcon>
-                        </span>
-                        {item.likeNum}
-                      </SpotLike>
-                    </SpotHeader>
-                    <SpotCategory>{item.contentslabel}</SpotCategory>
-                    <SpotAddress>{item.address}</SpotAddress>
-                  </LikeData>
-                </LikeCardA>
-              </LikeCard>
-            );
-          })}
+          {assayData.length === 0 ? (
+            <ResultData>누른 좋아요가 없습니다.</ResultData>
+          ) : (
+            assayData.map((item: any) => {
+              return (
+                <LikeCard key={item.contentsid}>
+                  <LikeCardA href={`/spot/info/${item.contentsid}`}>
+                    <LikeImgDiv>
+                      <LikeImg src={`${BASE_URL}${item.imgpath}`} />
+                    </LikeImgDiv>
+                    <LikeData>
+                      <SpotHeader>
+                        <SpotTitle>{item.title}</SpotTitle>
+                        <SpotLike>
+                          <span>
+                            <FontAwesomeIcon
+                              style={{ color: "pink", margin: "0px 3px" }}
+                              icon={faHeart}
+                            ></FontAwesomeIcon>
+                          </span>
+                          {item.likeNum}
+                        </SpotLike>
+                      </SpotHeader>
+                      <SpotCategory>{item.contentslabel}</SpotCategory>
+                      <SpotAddress>{item.address}</SpotAddress>
+                    </LikeData>
+                  </LikeCardA>
+                </LikeCard>
+              );
+            })
+          )}
         </LikeSection>
       </LikeContainer>
     </>

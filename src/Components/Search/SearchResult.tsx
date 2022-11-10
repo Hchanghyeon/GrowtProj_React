@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getSpotData } from "../../API/Spot/Spot";
+import { getSpotData, getSpotSearch } from "../../API/Spot/Spot";
 
 const Container = styled.div`
   width: 90%;
@@ -46,20 +46,38 @@ const ResultTitle = styled.div`
   width: 100%;
 `;
 
+const Input = styled.input`
+  width: 100%;
+  height: 35px;
+  padding-left:5px;
+  background-color: #efefef;
+  border-style:none;
+  border-radius:3px;
+`;
+
 const SearchResult = () => {
   const [spotData, setSpotData] = useState<any>([]);
-
+  const [searchText, setSearchText] = useState('');
   useEffect(() => {
     const start = async () => {
-      const getData: any = await getSpotData(1);
+      const data = {
+        searchData : searchText,
+      }
+      const getData: any = await getSpotSearch(data);
       setSpotData(getData.json);
+      console.log(getData);
     };
 
     start();
-  }, []);
+  }, [searchText]);
+
+  const getSearchData = (e:any) => {
+    setSearchText(e.target.value);
+  }
 
   return (
     <Container>
+      <Input onChange={getSearchData}></Input>
       {spotData.map((item:any, i:any) => {
         return (
           <ResultDiv key={i}>

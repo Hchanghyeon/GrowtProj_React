@@ -10,6 +10,7 @@ const LikeContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  align-items:center;
   flex-direction: column;
   @media screen and (max-width: 768px) {
     align-items: center;
@@ -26,7 +27,9 @@ const LikeSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  justify-content:center;
   height: 100%;
+  min-height:300px;
   padding-top: 30px;
   @media screen and (max-width: 768px) {
     justify-content: center;
@@ -89,6 +92,8 @@ const LikeCardA = styled.a`
   text-decoration: none;
 `;
 
+const ResultData = styled.div``;
+
 const MyPageLikeSpot = () => {
   const accessToken = useSelector((state: any) => state.user.accessToken);
   const [spotData, setSpotData] = useState<any>([]);
@@ -109,33 +114,37 @@ const MyPageLikeSpot = () => {
       <LikeContainer>
         <LikeHeader>내가 좋아요 누른 관광지 목록 </LikeHeader>
         <LikeSection>
-          {spotData.map((item: any) => {
-            return (
-              <LikeCard key={item.contentsid}>
-                <LikeCardA href={`/spot/info/${item.contentsid}`}>
-                  <LikeImgDiv>
-                    <LikeImg src={`${item.imgpath}`} />
-                  </LikeImgDiv>
-                  <LikeData>
-                    <SpotHeader>
-                      <SpotTitle>{item.title}</SpotTitle>
-                      <SpotLike>
-                        <span>
-                          <FontAwesomeIcon
-                            style={{ color: "pink", margin: "0px 3px" }}
-                            icon={faHeart}
-                          ></FontAwesomeIcon>
-                        </span>
-                        {item.likeNum}
-                      </SpotLike>
-                    </SpotHeader>
-                    <SpotCategory>{item.contentslabel}</SpotCategory>
-                    <SpotAddress>{item.address}</SpotAddress>
-                  </LikeData>
-                </LikeCardA>
-              </LikeCard>
-            );
-          })}
+          {spotData.length === 0 ? (
+            <ResultData>누른 좋아요가 없습니다.</ResultData>
+          ) : (
+            spotData.map((item: any, i:number) => {
+              return (
+                <LikeCard key={item.contentsid}>
+                  <LikeCardA href={`/spot/info/${item.contentsid}`}>
+                    <LikeImgDiv>
+                      <LikeImg src={`${item.imgpath}`} />
+                    </LikeImgDiv>
+                    <LikeData>
+                      <SpotHeader>
+                        <SpotTitle>{item.title}</SpotTitle>
+                        <SpotLike>
+                          <span>
+                            <FontAwesomeIcon
+                              style={{ color: "pink", margin: "0px 3px" }}
+                              icon={faHeart}
+                            ></FontAwesomeIcon>
+                          </span>
+                          {item.likeNum}
+                        </SpotLike>
+                      </SpotHeader>
+                      <SpotCategory>{item.contentslabel}</SpotCategory>
+                      <SpotAddress>{item.address}</SpotAddress>
+                    </LikeData>
+                  </LikeCardA>
+                </LikeCard>
+              );
+            })
+          )}
         </LikeSection>
       </LikeContainer>
     </>
