@@ -5,7 +5,6 @@ import {
   faBorderAll,
   faMountainSun,
   faUtensils,
-  faMugSaucer,
   faBook,
   faBed,
 } from "@fortawesome/free-solid-svg-icons";
@@ -95,6 +94,7 @@ function Navigation({ selectCategory }: any) {
         nonClick.style.borderBottomStyle = "none";
         nonClick.style.paddingBottom = "0px";
       }
+      return null;
     });
   }, [clicked]);
 

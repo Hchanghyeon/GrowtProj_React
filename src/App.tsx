@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Loading from "./Components/Loading/Loading";
 import MainRoute from "./Routes/MainRoute";
-import SearchRoute from "./Routes/SearchRoute";
-import UserRoute from "./Routes/UserRoute";
+import "./Styles/app.css";
 
 function App() {
   const [userLoginBtn, setUserLoginBtn] = useState<boolean>(false);

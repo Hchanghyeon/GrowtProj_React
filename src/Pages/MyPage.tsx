@@ -9,6 +9,8 @@ import LoginModal from "../Components/User/LoginModal";
 import styled from "styled-components";
 import { BASE_URL } from "../API/Common";
 import { getUserInfo } from "../API/User/User";
+import MyPageLikeSpot from "../Components/User/MyPageLikeSpot";
+import MyPageLikeAssay from "../Components/User/MyPageLikeAssay";
 
 const Atag = styled.a`
   position: absolute;
@@ -86,6 +88,17 @@ const NoLoginHeaderContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+const SectionContainer = styled.div`
+  display: flex;
+  width: 90%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  @media screen and (max-width: 1268px) {
+    flex-wrap: wrap;
+  }
+`;
+
 const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   const userLoginState = useSelector((state: any) => state.user.authenticated);
   const userId = useSelector((state: any) => state.user.userId);
@@ -120,17 +133,23 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
     <Container>
       <Header changeLoginState={changeLoginState} userLoginBtn={userLoginBtn} />
       {userLoginState ? (
-        <HeaderContainer>
-          <ImgContainer>
-            <Img src={`${BASE_URL}${userLoginImg}`}></Img>
-          </ImgContainer>
-          <UserContainer>
-            <UserName>{userData.userName}님</UserName>
-            <Lv>Lv. 20 </Lv>
-          </UserContainer>
-          <Atag onClick={logout}>로그아웃</Atag>
-          <AtagMyAssay onClick={goMyAssay}>나의 여행일지</AtagMyAssay>
-        </HeaderContainer>
+        <>
+          <HeaderContainer>
+            <ImgContainer>
+              <Img src={`${BASE_URL}${userLoginImg}`}></Img>
+            </ImgContainer>
+            <UserContainer>
+              <UserName>{userData.userName}님</UserName>
+              <Lv>Lv. 20 </Lv>
+            </UserContainer>
+            <Atag onClick={logout}>로그아웃</Atag>
+            <AtagMyAssay onClick={goMyAssay}>나의 여행일지</AtagMyAssay>
+          </HeaderContainer>
+          <SectionContainer>
+            <MyPageLikeSpot />
+            <MyPageLikeAssay />
+          </SectionContainer>
+        </>
       ) : (
         <NoLoginHeaderContainer>
           <Atag onClick={changeLoginState}>로그인</Atag>

@@ -7,6 +7,7 @@ import {
   faLocationCrosshairs,
 } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
+import { BASE_URL } from "../../API/Common";
 
 const NaverMap = styled.div`
   position: relative;
@@ -76,19 +77,19 @@ const Text = styled.a`
   height: 70px;
   padding-top: 5px;
   margin: 0px auto;
-  text-decoration:none;
-  color:black;
+  text-decoration: none;
+  color: black;
 `;
 
 const Div = styled.div`
   font-weight: bold;
   font-size: 12px;
-  padding-left:5px;
+  padding-left: 5px;
 `;
 
 const Div2 = styled.div`
   font-size: 11px;
-  padding-left:5px;
+  padding-left: 5px;
 `;
 
 const Span = styled.div`
@@ -123,9 +124,9 @@ const LocationBtn = styled.button`
 `;
 
 const MapHeader = styled.div`
-display:flex;
-justify-content:center;
-align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   width: 300px;
   height: 50px;
@@ -152,20 +153,20 @@ const MoreBtn = styled.button`
 `;
 
 const MoreDiv = styled.div`
-display:flex;
-justify-content:center;
-align-items:center;
-  width:190px;
-  height:50px;
-  font-size:14px;
-  font-weight:bold;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 190px;
+  height: 50px;
+  font-size: 14px;
+  font-weight: bold;
+`;
 
 const MoreImg = styled.img`
-  width:20px; 
-  height:20px;
-  margin-left:5px;
-`
+  width: 20px;
+  height: 20px;
+  margin-left: 5px;
+`;
 
 const Map = (userClickBtn: any) => {
   const [userCurrentLocation, setUserCurrentLocation] =
@@ -173,9 +174,9 @@ const Map = (userClickBtn: any) => {
   const refNum: any = useRef(0);
   const forestNum: any = useRef(0);
   const homeNum: any = useRef(0);
-  const foodNum: any =useRef(0);
+  const foodNum: any = useRef(0);
   const spotData: any = useRef([]);
-  const assayNum: any =useRef(0);
+  const assayNum: any = useRef(0);
 
   let map: any = null;
   let marker: any;
@@ -226,52 +227,54 @@ const Map = (userClickBtn: any) => {
     initMap();
     const start: any = async () => {
       let data: any;
-      if(spotData.current.length > 180){
-         alert('200개 이상 요청시 버벅거림으로 초기화 후 검색되지 않았던 다른 리스트를 출력합니다');
-         spotData.current = [];
+      if (spotData.current.length > 180) {
+        alert(
+          "200개 이상 요청시 버벅거림으로 초기화 후 검색되지 않았던 다른 리스트를 출력합니다"
+        );
+        spotData.current = [];
       }
       if (userClickBtn.userClickBtn === "") {
         data = await fetchSpot.getSpotData(refNum.current);
         spotData.current = [...spotData.current, ...data.json];
         forestNum.current = 0;
-        homeNum.current =0;
-        foodNum.current =0;
-        spotData.current.map((item:any) => {
-          if(item.contentsvalue === 'c1'){
+        homeNum.current = 0;
+        foodNum.current = 0;
+        spotData.current.map((item: any) => {
+          if (item.contentsvalue === "c1") {
             forestNum.current = forestNum.current + 1;
-          } else if(item.contentsvalue ==='c3'){
+          } else if (item.contentsvalue === "c3") {
             homeNum.current = homeNum.current + 1;
-          } else if(item.contentsvalue ==='c4'){
+          } else if (item.contentsvalue === "c4") {
             foodNum.current = foodNum.current + 1;
           }
-        })
+        });
       } else {
         data = await fetchSpot.getCategorySpotData(
           userClickBtn.userClickBtn,
           refNum.current
         );
-        if(data.json.length === 0){
-          alert('요청한 데이터가 전부입니다. 처음데이터로 돌아갑니다');
+        if (data.json.length === 0) {
+          alert("요청한 데이터가 전부입니다. 처음데이터로 돌아갑니다");
           refNum.current = 0;
           spotData.current = [];
           go();
         }
         spotData.current = [...spotData.current, ...data.json];
         forestNum.current = 0;
-        homeNum.current =0;
-        foodNum.current =0;
-        assayNum.current=0;
-        spotData.current.map((item:any) => {
-          if(item.contentsvalue === 'c1'){
+        homeNum.current = 0;
+        foodNum.current = 0;
+        assayNum.current = 0;
+        spotData.current.map((item: any) => {
+          if (item.contentsvalue === "c1") {
             forestNum.current = forestNum.current + 1;
-          } else if(item.contentsvalue ==='c3'){
+          } else if (item.contentsvalue === "c3") {
             homeNum.current = homeNum.current + 1;
-          } else if(item.contentsvalue ==='c4'){
+          } else if (item.contentsvalue === "c4") {
             foodNum.current = foodNum.current + 1;
           } else {
             assayNum.current = assayNum.current + 1;
           }
-        })
+        });
       }
 
       const food: any = document.getElementById("food2");
@@ -283,7 +286,6 @@ const Map = (userClickBtn: any) => {
       home.innerHTML = homeNum.current;
       forest.innerHTML = forestNum.current;
       assay.innerHTML = assayNum.current;
-
 
       const result: any = spotData.current;
       for (let i = 0; i < result.length; i++) {
@@ -351,7 +353,7 @@ const Map = (userClickBtn: any) => {
           const mapBtn: any = document.getElementById("clickMapBtn");
           const spotTitle: any = document.getElementById("spotTitle");
           const spotIntro: any = document.getElementById("spotIntro");
-          const alink:any = document.getElementById("alink");
+          const alink: any = document.getElementById("alink");
           const like: any = document.getElementById("like");
           mapBtn.style.visibility = "hidden";
           mapBtn.style.opacity = 0;
@@ -360,7 +362,7 @@ const Map = (userClickBtn: any) => {
               new naver.maps.LatLng(result[i].latitude, result[i].longitude)
             );
             map.setZoom(13, true);
-            imgsrc.src = `http://growingtrip.com:3001${result[i].imgpath}`;
+            imgsrc.src = `${BASE_URL}${result[i].imgpath}`;
             spotTitle.innerHTML = result[i].title;
             spotIntro.innerHTML = result[i].introduction;
             like.innerHTML = result[i].likeNum;
@@ -377,7 +379,7 @@ const Map = (userClickBtn: any) => {
           const mapBtn: any = document.getElementById("clickMapBtn");
           const spotTitle: any = document.getElementById("spotTitle");
           const spotIntro: any = document.getElementById("spotIntro");
-          const alink:any = document.getElementById("alink");
+          const alink: any = document.getElementById("alink");
           const like: any = document.getElementById("like");
           mapBtn.style.visibility = "hidden";
           mapBtn.style.opacity = 0;
@@ -409,9 +411,9 @@ const Map = (userClickBtn: any) => {
     spotData.current = [];
     refNum.current = 0;
     forestNum.current = 0;
-    homeNum.current =0;
-    foodNum.current =0;
-    assayNum.current =0;
+    homeNum.current = 0;
+    foodNum.current = 0;
+    assayNum.current = 0;
     go();
   }, [userClickBtn]);
 
@@ -425,7 +427,15 @@ const Map = (userClickBtn: any) => {
       <NaverMap id="map"></NaverMap>
       <MapHeader>
         <MoreBtn onClick={moreData}>더보기</MoreBtn>
-      <MoreDiv><MoreImg src="/img/forest.png"/><span id="forest"></span> <MoreImg src="/img/fast-food.png"/><span id="food2"></span><MoreImg src="/img/home.png"/><span id="home"></span><MoreImg src="/img/travel.png"/><span id="assay2"></span></MoreDiv> 
+        <MoreDiv>
+          <MoreImg src="/img/forest.png" />
+          <span id="forest"></span> <MoreImg src="/img/fast-food.png" />
+          <span id="food2"></span>
+          <MoreImg src="/img/home.png" />
+          <span id="home"></span>
+          <MoreImg src="/img/travel.png" />
+          <span id="assay2"></span>
+        </MoreDiv>
       </MapHeader>
       <DivContainer id="clickMapBtn">
         <ImgContainer>

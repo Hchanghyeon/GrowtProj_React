@@ -1,10 +1,8 @@
 import { useDispatch } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { config } from "../../Config/Config";
 import { signin } from "../../API/User/User";
 import { SET_USER } from "../../Store/User/User";
-import Loading from "../Loading/Loading";
 
 const Form = styled.div`
   width: 90%;
@@ -74,7 +72,6 @@ const LoginForm = ({ changeLoginState }: any) => {
   const [errorId, setErrorId] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 

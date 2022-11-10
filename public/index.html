@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR&display=swap" rel="stylesheet">
-  <title>Page</title>
-  <style>
-    body {
-      font-family: 'Noto Serif KR', serif;
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+    />
 
-      margin: 0px auto;
-      padding: 0px;
-      max-width: 1760px;
-    }
-  </style>
-</head>
-<body>
-  <div id="root"></div>
-  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=v1qeu7xew1">
-  </script>
-</body>
+    <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+    <title>Page</title>
+    <style>
+      @font-face {
+        font-family: "Nanum Square Neo";
+        src: url(./assets/fonts/NanumSquareNeoTTF-cBd.woff2) format("woff2");
+      }
+
+      * {
+        font-family: "Nanum Square Neo";
+      }
+
+      body {
+        margin: 0px auto;
+        padding: 0px;
+        max-width: 1760px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      type="text/javascript"
+      src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=v1qeu7xew1"
+    ></script>
+  </body>
 </html>
