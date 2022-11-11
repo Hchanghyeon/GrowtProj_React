@@ -1,4 +1,3 @@
-import { access } from "fs";
 import { response } from "../Common";
 
 export async function getSpotData(num: number) {
@@ -75,3 +74,13 @@ export const getSpotSearch = async (credentials: any) => {
   return await response(`spot/search/`, option);
 };
 
+export const getTagSearch = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response(`spot/searchTag/`, option);
+};

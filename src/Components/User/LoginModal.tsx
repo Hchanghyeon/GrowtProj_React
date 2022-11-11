@@ -6,8 +6,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
 const LoginModalContainer = styled.div`
-
-  z-index:100;
+  z-index: 100;
   .open {
     justify-content: center;
     align-items: center;
@@ -83,16 +82,16 @@ const LoginHeaderText = styled.div`
 `;
 
 const RegisterBtnContainer = styled.div`
-    width:90%;
-    display:flex;
-    justify-content:end;
-    align-items:center;
-`
+  width: 90%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+`;
 const RegisterBtn = styled.a`
-font-size:13px;
-    background-color:white;
-    border-style:none;
-    color:silver;
+  font-size: 13px;
+  background-color: white;
+  border-style: none;
+  color: silver;
 `;
 
 const LoginModal = ({ userLoginBtn, changeLoginState }: any) => {
@@ -115,24 +114,24 @@ const LoginModal = ({ userLoginBtn, changeLoginState }: any) => {
         }}
       >
         <div className={userLoginBtn ? "LoginModal" : "LoginModalClose"}>
-        <RegisterBtnContainer>
-          {userLogin === "login" ? (
-            <RegisterBtn
-              onClick={() => {
-                setUserLogin("register");
-              }}
-            >
-              회원이 아니신가요? 회원가입
-            </RegisterBtn>
-          ) : (
-            <RegisterBtn
-              onClick={() => {
-                setUserLogin("login");
-              }}
-            >
-              회원이신가요? 로그인
-            </RegisterBtn>
-          )}
+          <RegisterBtnContainer>
+            {userLogin === "login" ? (
+              <RegisterBtn
+                onClick={() => {
+                  setUserLogin("register");
+                }}
+              >
+                회원이 아니신가요? 회원가입
+              </RegisterBtn>
+            ) : (
+              <RegisterBtn
+                onClick={() => {
+                  setUserLogin("login");
+                }}
+              >
+                회원이신가요? 로그인
+              </RegisterBtn>
+            )}
           </RegisterBtnContainer>
           <LoginHeader>
             <FontAwesomeIcon

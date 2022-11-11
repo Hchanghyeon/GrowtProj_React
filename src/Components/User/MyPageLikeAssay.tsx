@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getUserLike, getUserSpotLike } from "../../API/Spot/Spot";
+import { getUserLike } from "../../API/Spot/Spot";
 import { getUserAssayLike } from "../../API/Assay/Assay";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,7 @@ const LikeContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items:center;
+  align-items: center;
   flex-direction: column;
   @media screen and (max-width: 768px) {
     align-items: center;
@@ -29,9 +29,9 @@ const LikeSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  justify-content:center;
+  justify-content: center;
   height: 100%;
-  min-height:300px;
+  min-height: 300px;
   padding-top: 30px;
   @media screen and (max-width: 768px) {
     justify-content: center;
