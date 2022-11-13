@@ -6,6 +6,7 @@ import MyAssay from "../Pages/MyAssay";
 import MyPage from "../Pages/MyPage";
 import SearchPage from "../Pages/SearchPage";
 import SpotInfoPage from "../Pages/SpotInfoPage";
+import CharacterPage from "../Pages/CharacterPage";
 
 const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
   return (
@@ -20,7 +21,7 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
         }
       />
       <Route
-        path='/spot/info/:id'
+        path="/spot/info/:id"
         element={
           <SpotInfoPage
             changeLoginState={changeLoginState}
@@ -28,7 +29,7 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
           />
         }
       />
-       <Route
+      <Route
         path="/search/*"
         element={
           <SearchPage
@@ -37,7 +38,7 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
           />
         }
       />
-            <Route
+      <Route
         path="/user/myPage/*"
         element={
           <MyPage
@@ -45,9 +46,8 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
             userLoginBtn={userLoginBtn}
           />
         }
-        
       />
-                  <Route
+      <Route
         path="/user/myAssay/*"
         element={
           <MyAssay
@@ -55,8 +55,17 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
             userLoginBtn={userLoginBtn}
           />
         }
-        />
-                          <Route
+      />
+      <Route
+        path="/user/character/*"
+        element={
+          <CharacterPage
+            changeLoginState={changeLoginState}
+            userLoginBtn={userLoginBtn}
+          />
+        }
+      />
+      <Route
         path="/assay/assayList/*"
         element={
           <AssayList
@@ -64,7 +73,7 @@ const MainRoute = ({ userLoginBtn, changeLoginState }: any) => {
             userLoginBtn={userLoginBtn}
           />
         }
-        />
+      />
     </Routes>
   );
 };

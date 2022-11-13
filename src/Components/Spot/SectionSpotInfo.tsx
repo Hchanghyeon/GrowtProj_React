@@ -2,10 +2,22 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { Routes, Route, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getSpotInfoData } from "../../API/Spot/Spot";
 import { useSelector } from "react-redux";
 import { getChangeLikeState, checkSpotLike } from "../../API/Spot/Spot";
+import { TextField, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
+  CircularProgress,
+} from "@mui/material";
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -54,7 +66,6 @@ const ContentContainer = styled.div`
 const SpotContent = styled.div`
   display: flex;
   justify-content: center;
-  align-item: center;
   flex-direction: column;
   width: 90%;
   margin: 0 auto;
@@ -64,12 +75,23 @@ const NaverMap = styled.div`
   height: 400px;
   width: 100%;
   border-radius: 15px;
-  margin-bottom: 200px;
 
   @media screen and (max-width: 768px) {
     width: 90%;
     height: 200px;
     margin-bottom: 100px;
+  }
+`;
+
+const NaverMap2 = styled.div`
+  height: 300px;
+  width: 100%;
+  border-radius: 15px;
+  margin-bottom: 10px;
+
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    height: 300px;
   }
 `;
 
@@ -173,7 +195,6 @@ const SpotExplain = styled.div`
 
 const SpotInfomation = styled.div`
   display: flex;
-  align-item: center;
   flex-direction: column;
   width: 100%;
   padding-left: 10px;
@@ -205,12 +226,51 @@ const SpotLike = styled.a``;
 
 const SpotAddressContent = styled.div``;
 
+const CommentHeader = styled.div`
+  padding-left: 20px;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  @media screen and (max-width: 768px) {
+    padding-left: 0px;
+    width: 90%;
+    font-size: 22px;
+  }
+`;
+
+const CommentContainer = styled.div`
+  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 200px;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    font-size: 22px;
+  }
+`;
+
+const CommentInput = styled.div``;
+
+const CommentButtonDiv = styled.div`
+  display: flex;
+  justify-content: end;
+`;
+
 const SectionSpotInfo = () => {
   const [spotData, setSpotData] = useState<any>({});
   const { id } = useParams();
   const accessToken = useSelector((state: any) => state.user.accessToken);
   const [state, setState] = useState(false);
   const [likeState, setLikeState] = useState(false);
+  const [value, setValue] = useState(3);
+  const [review, setReview] = useState("");
+  const [modal, setModal] = useState(false);
+  const [distance, setDistance] = useState(0);
+  const [nowState, setNowState] = useState(false);
+  const [notice, setNotice] = useState("");
+  const handleClose = () => {
+    setModal(false);
+  };
 
   useEffect(() => {
     const getSpotInfoDataFunc = async () => {
@@ -251,6 +311,107 @@ const SectionSpotInfo = () => {
       setState(!state);
     }
   };
+
+  const handleReview = (e: any) => {
+    setReview(e.target.value);
+  };
+
+  function getDistanceFromLatLonInKm(
+    lat1: any,
+    lng1: any,
+    lat2: any,
+    lng2: any
+  ) {
+    function deg2rad(deg: any) {
+      return deg * (Math.PI / 180);
+    }
+
+    var R = 6371; // Radius of the earth in km
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lng2 - lng1);
+    var a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
+  }
+
+  const locationCheck = () => {
+    setModal(!modal);
+    setNowState(true);
+    let startPos;
+    let geoSuccess = function (position: any) {
+      startPos = position;
+      const spotCoord = {
+        lat: spotData.latitude,
+        lng: spotData.longitude,
+      };
+
+      const userCoord = {
+        lat: startPos.coords.latitude,
+        lng: startPos.coords.longitude,
+      };
+      const km = getDistanceFromLatLonInKm(
+        spotCoord.lat,
+        spotCoord.lng,
+        userCoord.lat,
+        userCoord.lng
+      );
+
+      setDistance(km);
+
+      if (km < 1) {
+        setNotice("1KM 이내로 인증 가능합니다");
+      } else {
+        setNotice("1KM 초과로 인증 불가능합니다");
+      }
+
+      if (!modal) {
+        const map2 = new naver.maps.Map("map2", {
+          center: new naver.maps.LatLng(35.566381, 127.377717),
+          zoom: 5,
+        });
+
+        let marker = new naver.maps.Marker({
+          map: map2,
+          position: new naver.maps.LatLng(
+            startPos.coords.latitude,
+            startPos.coords.longitude
+          ),
+        });
+
+        let marker2 = new naver.maps.Marker({
+          map: map2,
+          position: new naver.maps.LatLng(
+            spotData.latitude,
+            spotData.longitude
+          ),
+        });
+
+        let polyline = new naver.maps.Polyline({
+          map: map2,
+          path: [
+            new naver.maps.LatLng(
+              startPos.coords.latitude,
+              startPos.coords.longitude
+            ),
+            new naver.maps.LatLng(spotData.latitude, spotData.longitude),
+          ],
+          strokeColor: "orange",
+          strokeOpacity: 0.6,
+          strokeWeight: 3,
+        });
+      }
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess);
+  };
+
+  useEffect(() => {}, [nowState]);
 
   return (
     <SectionContainer>
@@ -311,6 +472,70 @@ const SectionSpotInfo = () => {
         <SpotInfoHeaderContentMap>지도</SpotInfoHeaderContentMap>
       </SpotMapHeader>
       <NaverMap id="map"></NaverMap>
+      <CommentHeader>리뷰</CommentHeader>
+      <CommentContainer>
+        <Box style={{ display: "flex", paddingBottom: "20px" }}>
+          <Typography style={{ fontSize: "16px" }} component="legend">
+            평점
+          </Typography>
+          <Rating
+            name="simple-controlled"
+            value={value}
+            onChange={(event: any, newValue: any) => {
+              setValue(newValue);
+            }}
+          />
+        </Box>
+        <TextField
+          style={{ width: "100%", marginBottom: "10px" }}
+          fullWidth
+          label="리뷰"
+          id="fullWidth"
+          onChange={handleReview}
+        />
+        <CommentButtonDiv>
+          <Button onClick={locationCheck} variant="contained" color="success">
+            위치인증
+          </Button>
+          <Button variant="contained" color="success">
+            등록
+          </Button>
+        </CommentButtonDiv>
+      </CommentContainer>
+      <Dialog open={modal}>
+        <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
+        {nowState ? (
+          <>
+            <DialogContent style={{ width: "300px", height: "350px" }}>
+              <NaverMap2 id="map2" />
+              <DialogContentText>
+                관광지와 현재 나와의 거리 : {distance.toFixed(2)}Km
+              </DialogContentText>
+              <DialogContentText>{notice}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose}>
+                취소
+              </Button>
+              <Button onClick={handleClose} autoFocus>
+                인증
+              </Button>
+            </DialogActions>
+          </>
+        ) : (
+          <DialogContent
+            style={{
+              width: "300px",
+              height: "350px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress color="inherit" />
+          </DialogContent>
+        )}
+      </Dialog>
     </SectionContainer>
   );
 };

@@ -10,7 +10,7 @@ const LikeContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items:center;
+  align-items: center;
   flex-direction: column;
   @media screen and (max-width: 768px) {
     align-items: center;
@@ -27,26 +27,31 @@ const LikeSection = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  justify-content:center;
+  justify-content: center;
   height: 100%;
-  min-height:300px;
+  min-height: 300px;
   padding-top: 30px;
   @media screen and (max-width: 768px) {
     justify-content: center;
   }
 `;
-
 const LikeCard = styled.div`
   width: 200px;
   height: 100%;
   margin: 0px 10px;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+    width: 150px;
+  }
 `;
 
 const LikeImgDiv = styled.div`
   width: 100%;
   height: 200px;
+  @media screen and (max-width: 768px) {
+    height: 150px;
+  }
 `;
 
 const LikeImg = styled.img`
@@ -72,17 +77,29 @@ const SpotHeader = styled.div`
 const SpotTitle = styled.div`
   font-size: 14px;
   font-weight: bold;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotLike = styled.div`
   font-size: 14px;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotCategory = styled.div`
   font-size: 14px;
   color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotAddress = styled.div`
   font-size: 14px;
   color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const LikeCardA = styled.a`
@@ -117,7 +134,7 @@ const MyPageLikeSpot = () => {
           {spotData.length === 0 ? (
             <ResultData>누른 좋아요가 없습니다.</ResultData>
           ) : (
-            spotData.map((item: any, i:number) => {
+            spotData.map((item: any, i: number) => {
               return (
                 <LikeCard key={item.contentsid}>
                   <LikeCardA href={`/spot/info/${item.contentsid}`}>

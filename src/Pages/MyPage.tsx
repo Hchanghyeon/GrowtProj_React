@@ -93,7 +93,7 @@ const SectionContainer = styled.div`
   width: 90%;
   height: 100%;
   justify-content: center;
-  margin-bottom:100px;
+  margin-bottom: 100px;
   @media screen and (max-width: 1268px) {
     flex-wrap: wrap;
   }
@@ -121,8 +121,11 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const data = await getUserInfo({ userId, accessToken });
-      if (!data.status) {
+      const data: any = await getUserInfo({ userId, accessToken });
+      if (accessToken) {
+        if (data.code === 401) {
+          logout();
+        }
       }
       setUserData(data.json.data);
     };

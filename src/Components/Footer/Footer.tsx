@@ -4,7 +4,7 @@ import {
   faMagnifyingGlass,
   faSuitcase,
   faMapLocationDot,
-  faGear,
+  faDragon,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
@@ -51,7 +51,7 @@ const FooterItem = [
   { icon: faHouse, link: "home", go: "/" },
   { icon: faMagnifyingGlass, link: "search", go: "/search" },
   { icon: faSuitcase, link: "spots", go: "/assay/assayList" },
-  { icon: faMapLocationDot, link: "map", go: "/" },
+  { icon: faDragon, link: "character", go: "/user/character" },
   { icon: faUser, link: "myPage", go: "/user/myPage" },
 ];
 

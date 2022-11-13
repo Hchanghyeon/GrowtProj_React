@@ -44,11 +44,17 @@ const LikeCard = styled.div`
   margin: 0px 10px;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+    width: 150px;
+  }
 `;
 
 const LikeImgDiv = styled.div`
   width: 100%;
   height: 200px;
+  @media screen and (max-width: 768px) {
+    height: 150px;
+  }
 `;
 
 const LikeImg = styled.img`
@@ -74,17 +80,29 @@ const SpotHeader = styled.div`
 const SpotTitle = styled.div`
   font-size: 14px;
   font-weight: bold;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotLike = styled.div`
   font-size: 14px;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotCategory = styled.div`
   font-size: 14px;
   color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 const SpotAddress = styled.div`
   font-size: 14px;
   color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const LikeCardA = styled.a`

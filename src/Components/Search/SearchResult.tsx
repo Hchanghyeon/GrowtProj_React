@@ -172,7 +172,7 @@ const SearchResult = () => {
           <ToggleButton value="tag">태그</ToggleButton>
         </ToggleButtonGroup>
       </SelectToggleDiv>
-      <Input onChange={getSearchData} value={searchText}></Input>
+      <Input placeholder="검색하고싶은 내용을 입력하세요" onChange={getSearchData} value={searchText}></Input>
       {alignment === "spot" || alignment === "tag" ? (
         spotData.map((item: any, i: any) => {
           return (

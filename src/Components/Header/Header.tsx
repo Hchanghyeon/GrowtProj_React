@@ -202,7 +202,7 @@ function Header({ changeLoginState }: any) {
               <a href="/user/myAssay/">
                 <MenuLi>나의 여행일지</MenuLi>
               </a>
-              <a href="/">
+              <a href="/user/character">
                 <MenuLi>캐릭터 정보</MenuLi>
               </a>
             </MenuUl>
