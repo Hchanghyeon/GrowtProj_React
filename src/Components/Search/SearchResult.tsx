@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getSpotSearch, getTagSearch } from "../../API/Spot/Spot";
 import { getAssaySearch } from "../../API/Assay/Assay";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { BASE_URL } from "../../API/Common";
@@ -172,7 +172,11 @@ const SearchResult = () => {
           <ToggleButton value="tag">태그</ToggleButton>
         </ToggleButtonGroup>
       </SelectToggleDiv>
-      <Input placeholder="검색하고싶은 내용을 입력하세요" onChange={getSearchData} value={searchText}></Input>
+      <Input
+        placeholder="검색하고싶은 내용을 입력하세요"
+        onChange={getSearchData}
+        value={searchText}
+      ></Input>
       {alignment === "spot" || alignment === "tag" ? (
         spotData.map((item: any, i: any) => {
           return (
@@ -195,7 +199,18 @@ const SearchResult = () => {
                   </ResultTitle>
                   <ResultLike>
                     <FontAwesomeIcon
-                      style={{ color: "pink" }}
+                      icon={faStar}
+                      style={{
+                        color: "#faaf00",
+                      }}
+                    />
+                    <LikeNum>
+                      {item.starNum.toFixed(2) <= 0
+                        ? 0
+                        : item.starNum.toFixed(2)}
+                    </LikeNum>
+                    <FontAwesomeIcon
+                      style={{ marginLeft: "5px", color: "pink" }}
                       icon={faHeart}
                     ></FontAwesomeIcon>
                     <LikeNum>{item.likeNum}</LikeNum>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
 import Loading from "../Loading/Loading";
 import LoadingSpot from "../Loading/LoadingSpot";
@@ -132,7 +132,9 @@ const SectionSpot = (userClickBtn: any) => {
     if (scrollTop + clientHeight >= scrollHeight) {
       setLoading(true);
       refNum.current = refNum.current + 1;
-      setTimeout(() => {start()},500);
+      setTimeout(() => {
+        start();
+      }, 500);
     }
   };
 
@@ -156,8 +158,21 @@ const SectionSpot = (userClickBtn: any) => {
                 <TextTitle>{item.title}</TextTitle>
                 <TextLike>
                   <FontAwesomeIcon
+                    icon={faStar}
+                    style={{
+                      marginRight: "5px",
+
+                      color: "#faaf00",
+                    }}
+                  />
+                  {item.starNum.toFixed(2) <= 0 ? 0 : item.starNum.toFixed(2)}
+                  <FontAwesomeIcon
                     icon={faHeart}
-                    style={{ marginRight: "5px", color: "pink" }}
+                    style={{
+                      marginLeft: "5px",
+                      marginRight: "5px",
+                      color: "pink",
+                    }}
                   />
                   {item.likeNum}
                 </TextLike>
@@ -168,9 +183,7 @@ const SectionSpot = (userClickBtn: any) => {
           </ImgConainter>
         );
       })}
-      {
-        loading ? <LoadingSpot text="로딩중입니다"/> : null
-      }
+      {loading ? <LoadingSpot text="로딩중입니다" /> : null}
     </SectionContainer>
   );
 };

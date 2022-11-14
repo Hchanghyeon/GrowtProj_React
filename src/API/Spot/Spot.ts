@@ -84,3 +84,14 @@ export const getTagSearch = async (credentials: any) => {
   };
   return await response(`spot/searchTag/`, option);
 };
+
+export const addSpotReview = async (contentsid: string, credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response(`spot/addReview/${contentsid}`, option);
+};

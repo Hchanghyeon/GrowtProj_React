@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
-import { getSpotInfoData } from "../../API/Spot/Spot";
+import { getSpotInfoData, addSpotReview } from "../../API/Spot/Spot";
 import { useSelector } from "react-redux";
 import { getChangeLikeState, checkSpotLike } from "../../API/Spot/Spot";
 import { TextField, Button } from "@mui/material";
+import { DELETE_USER } from "../../Store/User/User";
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
@@ -18,6 +20,7 @@ import {
   DialogActions,
   CircularProgress,
 } from "@mui/material";
+import { DistanceKm } from "../../Service/MapUtil";
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -26,6 +29,7 @@ const SectionContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-bottom: 100px;
 `;
 
 const SpotInfoContainer = styled.div`
@@ -242,7 +246,6 @@ const CommentHeader = styled.div`
 const CommentContainer = styled.div`
   margin-top: 20px;
   width: 100%;
-  margin-bottom: 200px;
   @media screen and (max-width: 768px) {
     width: 90%;
     font-size: 22px;
@@ -256,25 +259,81 @@ const CommentButtonDiv = styled.div`
   justify-content: end;
 `;
 
+const ReviewContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const ReviewBox = styled.div`
+  width: 100%;
+  height: 100px;
+`;
+
+const ReviewImgBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+`;
+
+const ReviewImg = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const ReviewContentBox = styled.div`
+  width: 80%;
+`;
+const ReviewStarBox = styled.div``;
+
+const ReviewComment = styled.div``;
+
+const ReviewAuth = styled.div``;
+
 const SectionSpotInfo = () => {
   const [spotData, setSpotData] = useState<any>({});
-  const { id } = useParams();
+  const { id }: any = useParams();
   const accessToken = useSelector((state: any) => state.user.accessToken);
-  const [state, setState] = useState(false);
-  const [likeState, setLikeState] = useState(false);
-  const [value, setValue] = useState(3);
-  const [review, setReview] = useState("");
-  const [modal, setModal] = useState(false);
-  const [distance, setDistance] = useState(0);
-  const [nowState, setNowState] = useState(false);
-  const [notice, setNotice] = useState("");
-  const handleClose = () => {
-    setModal(false);
+  const userId = useSelector((state: any) => state.user.userId);
+  const [state, setState] = useState<boolean>(false);
+  const [likeState, setLikeState] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
+  const [distance, setDistance] = useState<number>(0);
+  const [nowState, setNowState] = useState<boolean>(false);
+  const [notice, setNotice] = useState<string>("");
+  const [cancel, setCancel] = useState<boolean>(false);
+  const [btn, setBtn] = useState<boolean>(false);
+  const [locationBtnState, setLocationBtnState] = useState<boolean>(false);
+  const [locationBtnText, setLocationBtnText] = useState<string>("위치인증");
+
+  // 리뷰 데이터
+  const [review, setReview] = useState<string>("");
+  const [locationAuth, setLocationAuth] = useState<boolean>(false);
+  const [landmarkAuth, setLandmarkAuth] = useState<boolean>(false);
+  const [value, setValue] = useState<number>(3);
+  const [reviewState, setReviewState] = useState<boolean>(false);
+
+  // 리뷰 출력 데이터
+
+  // 로그아웃
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch(DELETE_USER());
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 200);
   };
 
   useEffect(() => {
     const getSpotInfoDataFunc = async () => {
       const spotInfoData = await getSpotInfoData(id);
+
+      if (spotInfoData.json[0].starNum <= 0) {
+        spotInfoData.json[0].starNum = 0;
+      } else {
+        spotInfoData.json[0].starNum = spotInfoData.json[0].starNum.toFixed(2);
+      }
+
       setSpotData(spotInfoData.json[0]);
       if (accessToken) {
         const result: any = await checkSpotLike(id, accessToken);
@@ -283,10 +342,11 @@ const SectionSpotInfo = () => {
         } else {
           setLikeState(false);
         }
+      } else {
       }
     };
     getSpotInfoDataFunc();
-  }, [state]);
+  }, [state, reviewState]);
 
   useEffect(() => {
     const initMap = () => {
@@ -295,7 +355,7 @@ const SectionSpotInfo = () => {
         zoom: 16,
       });
 
-      let marker = new naver.maps.Marker({
+      const marker = new naver.maps.Marker({
         map: map,
         position: new naver.maps.LatLng(spotData.latitude, spotData.longitude),
       });
@@ -303,6 +363,7 @@ const SectionSpotInfo = () => {
     initMap();
   }, [spotData]);
 
+  // 좋아요 토글
   const likeToggle = async (contentsId: string) => {
     const result: any = await getChangeLikeState(contentsId, accessToken);
     if (result.code === 401) {
@@ -312,33 +373,45 @@ const SectionSpotInfo = () => {
     }
   };
 
+  // 리뷰 데이터 입력시 가져오기
   const handleReview = (e: any) => {
     setReview(e.target.value);
   };
 
-  function getDistanceFromLatLonInKm(
-    lat1: any,
-    lng1: any,
-    lat2: any,
-    lng2: any
-  ) {
-    function deg2rad(deg: any) {
-      return deg * (Math.PI / 180);
-    }
+  // 위치 인증 버튼 클릭시
+  const handleLocationAuth = (e: any) => {
+    setLocationBtnText("위치인증됨");
+    setLocationBtnState(true);
+    setLocationAuth(true);
+    setModal(false);
+  };
 
-    var R = 6371; // Radius of the earth in km
-    var dLat = deg2rad(lat2 - lat1); // deg2rad below
-    var dLon = deg2rad(lng2 - lng1);
-    var a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(deg2rad(lat1)) *
-        Math.cos(deg2rad(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c; // Distance in km
-    return d;
-  }
+  // 지도 모달 취소 버튼 클릭시 닫기
+  const handleClose = () => {
+    setModal(false);
+  };
+
+  // 리뷰 등록 버튼 클릭
+  const submitReview = async () => {
+    // id 로 sendData 추가
+    const sendData = {
+      userId,
+      review,
+      locationAuth,
+      landmarkAuth,
+      starValue: value,
+    };
+
+    const result = await addSpotReview(id, sendData);
+
+    if (result.json.result === "ok") {
+      setReview("");
+      setLocationBtnText("위치인증");
+      setLocationBtnState(false);
+      setLocationAuth(false);
+      setReviewState(!reviewState);
+    }
+  };
 
   const locationCheck = () => {
     setModal(!modal);
@@ -346,72 +419,69 @@ const SectionSpotInfo = () => {
     let startPos;
     let geoSuccess = function (position: any) {
       startPos = position;
-      const spotCoord = {
-        lat: spotData.latitude,
-        lng: spotData.longitude,
-      };
-
-      const userCoord = {
-        lat: startPos.coords.latitude,
-        lng: startPos.coords.longitude,
-      };
-      const km = getDistanceFromLatLonInKm(
-        spotCoord.lat,
-        spotCoord.lng,
-        userCoord.lat,
-        userCoord.lng
+      const km = DistanceKm(
+        spotData.latitude,
+        spotData.longitude,
+        startPos.coords.latitude,
+        startPos.coords.longitude
       );
 
       setDistance(km);
+      setCancel(true);
 
+      let map2: any;
       if (km < 1) {
-        setNotice("1KM 이내로 인증 가능합니다");
+        setNotice("1KM 이내로 위치인증 가능합니다");
+        setBtn(true);
+        if (!modal) {
+          map2 = new naver.maps.Map("map2", {
+            center: new naver.maps.LatLng(
+              spotData.latitude,
+              spotData.longitude
+            ),
+            zoom: 14,
+          });
+        }
       } else {
-        setNotice("1KM 초과로 인증 불가능합니다");
+        setNotice("인증은 1KM 이내만 가능합니다");
+        if (!modal) {
+          map2 = new naver.maps.Map("map2", {
+            center: new naver.maps.LatLng(35.566381, 127.377717),
+            zoom: 5,
+          });
+        }
       }
 
-      if (!modal) {
-        const map2 = new naver.maps.Map("map2", {
-          center: new naver.maps.LatLng(35.566381, 127.377717),
-          zoom: 5,
-        });
+      const marker = new naver.maps.Marker({
+        map: map2,
+        position: new naver.maps.LatLng(
+          startPos.coords.latitude,
+          startPos.coords.longitude
+        ),
+      });
 
-        let marker = new naver.maps.Marker({
-          map: map2,
-          position: new naver.maps.LatLng(
+      const marker2 = new naver.maps.Marker({
+        map: map2,
+        position: new naver.maps.LatLng(spotData.latitude, spotData.longitude),
+      });
+
+      const polyline = new naver.maps.Polyline({
+        map: map2,
+        path: [
+          new naver.maps.LatLng(
             startPos.coords.latitude,
             startPos.coords.longitude
           ),
-        });
-
-        let marker2 = new naver.maps.Marker({
-          map: map2,
-          position: new naver.maps.LatLng(
-            spotData.latitude,
-            spotData.longitude
-          ),
-        });
-
-        let polyline = new naver.maps.Polyline({
-          map: map2,
-          path: [
-            new naver.maps.LatLng(
-              startPos.coords.latitude,
-              startPos.coords.longitude
-            ),
-            new naver.maps.LatLng(spotData.latitude, spotData.longitude),
-          ],
-          strokeColor: "orange",
-          strokeOpacity: 0.6,
-          strokeWeight: 3,
-        });
-      }
+          new naver.maps.LatLng(spotData.latitude, spotData.longitude),
+        ],
+        strokeColor: "orange",
+        strokeOpacity: 0.6,
+        strokeWeight: 3,
+      });
     };
 
     navigator.geolocation.getCurrentPosition(geoSuccess);
   };
-
-  useEffect(() => {}, [nowState]);
 
   return (
     <SectionContainer>
@@ -420,7 +490,18 @@ const SectionSpotInfo = () => {
           <SpotImg src={spotData.imgpath}></SpotImg>
           <ImgSpot>
             <ImgIconHeart>
-              <FontAwesomeIcon icon={faHeart} />
+              <FontAwesomeIcon
+                icon={faStar}
+                style={{
+                  color: "#faaf00",
+                }}
+              />
+            </ImgIconHeart>
+            <ImgIconData>
+              {spotData.starNum <= 0 ? 0 : spotData.starNum}
+            </ImgIconData>
+            <ImgIconHeart>
+              <FontAwesomeIcon style={{ marginLeft: "5px" }} icon={faHeart} />
             </ImgIconHeart>
             <ImgIconData>{spotData.likeNum}</ImgIconData>
           </ImgSpot>
@@ -473,69 +554,109 @@ const SectionSpotInfo = () => {
       </SpotMapHeader>
       <NaverMap id="map"></NaverMap>
       <CommentHeader>리뷰</CommentHeader>
-      <CommentContainer>
-        <Box style={{ display: "flex", paddingBottom: "20px" }}>
-          <Typography style={{ fontSize: "16px" }} component="legend">
-            평점
-          </Typography>
-          <Rating
-            name="simple-controlled"
-            value={value}
-            onChange={(event: any, newValue: any) => {
-              setValue(newValue);
-            }}
-          />
-        </Box>
-        <TextField
-          style={{ width: "100%", marginBottom: "10px" }}
-          fullWidth
-          label="리뷰"
-          id="fullWidth"
-          onChange={handleReview}
-        />
-        <CommentButtonDiv>
-          <Button onClick={locationCheck} variant="contained" color="success">
-            위치인증
-          </Button>
-          <Button variant="contained" color="success">
-            등록
-          </Button>
-        </CommentButtonDiv>
-      </CommentContainer>
-      <Dialog open={modal}>
-        <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
-        {nowState ? (
-          <>
-            <DialogContent style={{ width: "300px", height: "350px" }}>
-              <NaverMap2 id="map2" />
-              <DialogContentText>
-                관광지와 현재 나와의 거리 : {distance.toFixed(2)}Km
-              </DialogContentText>
-              <DialogContentText>{notice}</DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button autoFocus onClick={handleClose}>
-                취소
+      {accessToken ? (
+        <>
+          <CommentContainer>
+            <Box style={{ display: "flex", paddingBottom: "20px" }}>
+              <Typography style={{ fontSize: "16px" }} component="legend">
+                평점
+              </Typography>
+              <Rating
+                name="simple-controlled"
+                value={value}
+                onChange={(event: any, newValue: any) => {
+                  setValue(newValue);
+                }}
+              />
+            </Box>
+            <TextField
+              style={{ width: "100%", marginBottom: "10px" }}
+              fullWidth
+              label="리뷰"
+              id="fullWidth"
+              onChange={handleReview}
+              value={review}
+            />
+            <CommentButtonDiv>
+              {locationBtnState ? (
+                <Button
+                  onClick={locationCheck}
+                  variant="contained"
+                  color="success"
+                  disabled
+                >
+                  {locationBtnText}
+                </Button>
+              ) : (
+                <Button
+                  onClick={locationCheck}
+                  variant="contained"
+                  color="success"
+                >
+                  {locationBtnText}
+                </Button>
+              )}
+
+              <Button
+                variant="contained"
+                color="success"
+                onClick={submitReview}
+              >
+                등록
               </Button>
-              <Button onClick={handleClose} autoFocus>
-                인증
-              </Button>
-            </DialogActions>
-          </>
-        ) : (
-          <DialogContent
-            style={{
-              width: "300px",
-              height: "350px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <CircularProgress color="inherit" />
-          </DialogContent>
-        )}
-      </Dialog>
+            </CommentButtonDiv>
+          </CommentContainer>
+          <Dialog open={modal}>
+            <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
+            {nowState ? (
+              <>
+                <DialogContent style={{ width: "300px", height: "350px" }}>
+                  <NaverMap2 id="map2" />
+                  <DialogContentText>
+                    관광지와 현재 나와의 거리 : {distance.toFixed(2)}Km
+                  </DialogContentText>
+                  <DialogContentText>{notice}</DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  {cancel ? (
+                    <Button autoFocus onClick={handleClose}>
+                      취소
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                  {btn ? (
+                    <Button onClick={handleLocationAuth} autoFocus>
+                      인증
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </DialogActions>
+              </>
+            ) : (
+              <DialogContent
+                style={{
+                  width: "300px",
+                  height: "350px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress color="inherit" />
+              </DialogContent>
+            )}
+          </Dialog>{" "}
+        </>
+      ) : (
+        <></>
+      )}
+      <ReviewContainer>
+        <ReviewBox>
+          <Rating name="read-only" value={value} readOnly />
+        </ReviewBox>
+      </ReviewContainer>
     </SectionContainer>
   );
 };
