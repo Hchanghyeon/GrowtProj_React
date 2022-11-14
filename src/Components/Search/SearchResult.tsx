@@ -105,6 +105,7 @@ const ResultTag = styled.div`
 
 const LikeNum = styled.div`
   margin-left: 5px;
+  color: black;
 `;
 
 const SelectToggleDiv = styled.div`

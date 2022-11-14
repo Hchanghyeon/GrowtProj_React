@@ -173,7 +173,6 @@ const ImgSpot = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   @media screen and (max-width: 768px) {
     right: 30px;
   }
@@ -181,7 +180,9 @@ const ImgSpot = styled.div`
 
 const ImgIconData = styled.div`
   margin-left: 10px;
+  padding-right: 10px;
   color: white;
+
   @media screen and (max-width: 768px) {
     margin-left: 3px;
     font-size: 14px;
@@ -570,7 +571,7 @@ const SectionSpotInfo = () => {
               {spotData.starNum <= 0 ? 0 : spotData.starNum}
             </ImgIconData>
             <ImgIconHeart>
-              <FontAwesomeIcon style={{ marginLeft: "5px" }} icon={faHeart} />
+              <FontAwesomeIcon icon={faHeart} />
             </ImgIconHeart>
             <ImgIconData>{spotData.likeNum}</ImgIconData>
           </ImgSpot>
