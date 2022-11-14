@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faLandmark,
+  faLocationDot,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { getSpotInfoData, addSpotReview } from "../../API/Spot/Spot";
 import { useSelector } from "react-redux";
@@ -21,6 +26,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { DistanceKm } from "../../Service/MapUtil";
+import { BASE_URL } from "../../API/Common";
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -262,16 +268,27 @@ const CommentButtonDiv = styled.div`
 const ReviewContainer = styled.div`
   width: 100%;
   height: 100%;
+  padding-top: 20px;
 `;
 
 const ReviewBox = styled.div`
   width: 100%;
   height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #efefef;
+  padding: 20px 0px;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    margin: 0px auto;
+  }
 `;
 
 const ReviewImgBox = styled.div`
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 20%;
 `;
@@ -279,16 +296,54 @@ const ReviewImgBox = styled.div`
 const ReviewImg = styled.img`
   width: 100px;
   height: 100px;
+  @media screen and (max-width: 768px) {
+    width: 50px;
+    height: 50px;
+  }
 `;
 
 const ReviewContentBox = styled.div`
   width: 80%;
+  display: flex;
+  flex-direction: column;
 `;
-const ReviewStarBox = styled.div``;
+const ReviewStarBox = styled.div`
+  font-size: 13px;
+`;
 
-const ReviewComment = styled.div``;
+const ReviewComment = styled.div`
+  font-size: 13px;
+  padding-left: 5px;
+`;
 
-const ReviewAuth = styled.div``;
+const ReviewAuth = styled.div`
+  font-size: 13px;
+  margin-top: 10px;
+  padding-left: 5px;
+  color: silver;
+`;
+
+const ReviewId = styled.div`
+  font-size: 14px;
+  padding-left: 5px;
+  margin-bottom: 10px;
+`;
+
+const SpotTextHeader = styled.div`
+  font-size: 13px;
+  font-weight: bold;
+  color: black;
+`;
+
+const SpotTextContent = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+`;
+
+const SpotTextNotice = styled.div`
+  font-size: 12px;
+  font-weight: bold;
+`;
 
 const SectionSpotInfo = () => {
   const [spotData, setSpotData] = useState<any>({});
@@ -305,6 +360,7 @@ const SectionSpotInfo = () => {
   const [btn, setBtn] = useState<boolean>(false);
   const [locationBtnState, setLocationBtnState] = useState<boolean>(false);
   const [locationBtnText, setLocationBtnText] = useState<string>("위치인증");
+  const userLoginImg = useSelector((state: any) => state.user.imgSrc);
 
   // 리뷰 데이터
   const [review, setReview] = useState<string>("");
@@ -395,6 +451,7 @@ const SectionSpotInfo = () => {
   const submitReview = async () => {
     // id 로 sendData 추가
     const sendData = {
+      userImg: userLoginImg,
       userId,
       review,
       locationAuth,
@@ -610,12 +667,16 @@ const SectionSpotInfo = () => {
             <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
             {nowState ? (
               <>
-                <DialogContent style={{ width: "300px", height: "350px" }}>
+                <DialogContent style={{ width: "300px", height: "380px" }}>
                   <NaverMap2 id="map2" />
                   <DialogContentText>
-                    관광지와 현재 나와의 거리 : {distance.toFixed(2)}Km
+                    <SpotTextHeader>관광지와 현재 나와의 거리</SpotTextHeader>
+                    <SpotTextContent>{distance.toFixed(2)}Km</SpotTextContent>
+                    <hr></hr>
                   </DialogContentText>
-                  <DialogContentText>{notice}</DialogContentText>
+                  <DialogContentText>
+                    <SpotTextNotice>{notice}</SpotTextNotice>
+                  </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                   {cancel ? (
@@ -653,9 +714,47 @@ const SectionSpotInfo = () => {
         <></>
       )}
       <ReviewContainer>
-        <ReviewBox>
-          <Rating name="read-only" value={value} readOnly />
-        </ReviewBox>
+        {spotData.review &&
+          spotData.review.map((item: any, i: any) => {
+            return (
+              <ReviewBox key={i}>
+                <ReviewImgBox>
+                  <ReviewImg src={`${BASE_URL}${item.userImg}`} />
+                </ReviewImgBox>
+                <ReviewContentBox>
+                  <ReviewId>{item.userId}</ReviewId>
+                  <ReviewStarBox>
+                    <Rating name="read-only" value={item.starValue} readOnly />
+                  </ReviewStarBox>
+                  <ReviewComment>{item.review}</ReviewComment>
+                  <ReviewAuth>
+                    {item.locationAuth ? (
+                      <div style={{ color: "yellowgreen" }}>
+                        <FontAwesomeIcon
+                          style={{ marginRight: "3px" }}
+                          icon={faLocationDot}
+                        ></FontAwesomeIcon>
+                        위치인증
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {item.landmarkAuth ? (
+                      <div style={{ color: "blue" }}>
+                        <FontAwesomeIcon
+                          style={{ marginRight: "3px" }}
+                          icon={faLandmark}
+                        ></FontAwesomeIcon>
+                        위치인증
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </ReviewAuth>
+                </ReviewContentBox>
+              </ReviewBox>
+            );
+          })}
       </ReviewContainer>
     </SectionContainer>
   );
