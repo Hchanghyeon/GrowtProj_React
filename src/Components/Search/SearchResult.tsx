@@ -16,12 +16,13 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const ResultDiv = styled.div`
+const ResultDiv = styled.a`
   width: 100%;
   height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
   @media screen and (max-width: 768px) {
     height: 150px;
   }
@@ -83,7 +84,9 @@ const ResultLike = styled.div`
   align-items: center;
 `;
 
-const ResultHead = styled.div``;
+const ResultHead = styled.div`
+  color: black;
+`;
 const ResultCategory = styled.div`
   font-size: 14px;
   color: silver;
@@ -180,7 +183,7 @@ const SearchResult = () => {
       {alignment === "spot" || alignment === "tag" ? (
         spotData.map((item: any, i: any) => {
           return (
-            <ResultDiv key={i}>
+            <ResultDiv href={`/spot/info/${item.contentsid}`} key={i}>
               <ResultDivImg>
                 <ResultImg src={item.imgpath} />
               </ResultDivImg>
@@ -204,11 +207,7 @@ const SearchResult = () => {
                         color: "#faaf00",
                       }}
                     />
-                    <LikeNum>
-                      {item.starNum.toFixed(2) <= 0
-                        ? 0
-                        : item.starNum.toFixed(2)}
-                    </LikeNum>
+                    <LikeNum>{item.starNum}</LikeNum>
                     <FontAwesomeIcon
                       style={{ marginLeft: "5px", color: "pink" }}
                       icon={faHeart}

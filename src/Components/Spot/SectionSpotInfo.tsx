@@ -368,6 +368,7 @@ const SectionSpotInfo = () => {
   const [landmarkAuth, setLandmarkAuth] = useState<boolean>(false);
   const [value, setValue] = useState<number>(3);
   const [reviewState, setReviewState] = useState<boolean>(false);
+  const [loginState, setLoginState] = useState<boolean>(true);
 
   // 리뷰 출력 데이터
 
@@ -399,6 +400,17 @@ const SectionSpotInfo = () => {
           setLikeState(false);
         }
       } else {
+      }
+
+      console.log(spotInfoData.json[0].review.length);
+
+      if (spotInfoData.json[0].review.length !== 0) {
+        for (let i = 0; i < spotInfoData.json[0].review.length; i++) {
+          console.log(spotInfoData.json[0].review[i].userId);
+          if (spotInfoData.json[0].review[i].userId === userId) {
+            setLoginState(false);
+          }
+        }
       }
     };
     getSpotInfoDataFunc();
@@ -611,108 +623,154 @@ const SectionSpotInfo = () => {
       </SpotMapHeader>
       <NaverMap id="map"></NaverMap>
       <CommentHeader>리뷰</CommentHeader>
-      {accessToken ? (
-        <>
-          <CommentContainer>
-            <Box style={{ display: "flex", paddingBottom: "20px" }}>
-              <Typography style={{ fontSize: "16px" }} component="legend">
-                평점
-              </Typography>
-              <Rating
-                name="simple-controlled"
-                value={value}
-                onChange={(event: any, newValue: any) => {
-                  setValue(newValue);
-                }}
+      <>
+        <CommentContainer>
+          <Box style={{ display: "flex", paddingBottom: "20px" }}>
+            <Typography style={{ fontSize: "16px" }} component="legend">
+              평점
+            </Typography>
+            <Rating
+              name="simple-controlled"
+              value={value}
+              onChange={(event: any, newValue: any) => {
+                setValue(newValue);
+              }}
+            />
+          </Box>
+
+          {accessToken ? (
+            loginState ? (
+              <TextField
+                style={{ width: "100%", marginBottom: "10px" }}
+                fullWidth
+                label="리뷰"
+                id="fullWidth"
+                onChange={handleReview}
+                value={review}
               />
-            </Box>
+            ) : (
+              <TextField
+                style={{ width: "100%", marginBottom: "10px" }}
+                fullWidth
+                label="이미 리뷰를 입력한 관광지입니다"
+                id="fullWidth"
+                onChange={handleReview}
+                value={review}
+                disabled
+              />
+            )
+          ) : (
             <TextField
               style={{ width: "100%", marginBottom: "10px" }}
               fullWidth
-              label="리뷰"
+              label="로그인시 입력 가능합니다"
               id="fullWidth"
               onChange={handleReview}
               value={review}
+              disabled
             />
-            <CommentButtonDiv>
-              {locationBtnState ? (
+          )}
+
+          <CommentButtonDiv>
+            {locationBtnState ? (
+              <Button
+                onClick={locationCheck}
+                variant="contained"
+                color="success"
+                disabled
+              >
+                {locationBtnText}
+              </Button>
+            ) : (
+              <Button
+                onClick={locationCheck}
+                variant="contained"
+                color="success"
+              >
+                {locationBtnText}
+              </Button>
+            )}
+            {accessToken ? (
+              loginState ? (
                 <Button
-                  onClick={locationCheck}
+                  style={{ marginLeft: "5px" }}
                   variant="contained"
                   color="success"
-                  disabled
+                  onClick={submitReview}
                 >
-                  {locationBtnText}
+                  등록
                 </Button>
               ) : (
                 <Button
-                  onClick={locationCheck}
+                  style={{ marginLeft: "5px" }}
                   variant="contained"
                   color="success"
+                  onClick={submitReview}
+                  disabled
                 >
-                  {locationBtnText}
+                  등록
                 </Button>
-              )}
-
+              )
+            ) : (
               <Button
+                style={{ marginLeft: "5px" }}
                 variant="contained"
                 color="success"
                 onClick={submitReview}
+                disabled
               >
                 등록
               </Button>
-            </CommentButtonDiv>
-          </CommentContainer>
-          <Dialog open={modal}>
-            <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
-            {nowState ? (
-              <>
-                <DialogContent style={{ width: "300px", height: "380px" }}>
-                  <NaverMap2 id="map2" />
-                  <DialogContentText>
-                    <SpotTextHeader>관광지와 현재 나와의 거리</SpotTextHeader>
-                    <SpotTextContent>{distance.toFixed(2)}Km</SpotTextContent>
-                    <hr></hr>
-                  </DialogContentText>
-                  <DialogContentText>
-                    <SpotTextNotice>{notice}</SpotTextNotice>
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  {cancel ? (
-                    <Button autoFocus onClick={handleClose}>
-                      취소
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                  {btn ? (
-                    <Button onClick={handleLocationAuth} autoFocus>
-                      인증
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
-                </DialogActions>
-              </>
-            ) : (
-              <DialogContent
-                style={{
-                  width: "300px",
-                  height: "350px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CircularProgress color="inherit" />
-              </DialogContent>
             )}
-          </Dialog>{" "}
-        </>
-      ) : (
-        <></>
-      )}
+          </CommentButtonDiv>
+        </CommentContainer>
+        <Dialog open={modal}>
+          <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
+          {nowState ? (
+            <>
+              <DialogContent style={{ width: "300px", height: "380px" }}>
+                <NaverMap2 id="map2" />
+                <DialogContentText>
+                  <SpotTextHeader>관광지와 현재 나와의 거리</SpotTextHeader>
+                  <SpotTextContent>{distance.toFixed(2)}Km</SpotTextContent>
+                  <hr></hr>
+                </DialogContentText>
+                <DialogContentText>
+                  <SpotTextNotice>{notice}</SpotTextNotice>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                {cancel ? (
+                  <Button autoFocus onClick={handleClose}>
+                    취소
+                  </Button>
+                ) : (
+                  <></>
+                )}
+                {btn ? (
+                  <Button onClick={handleLocationAuth} autoFocus>
+                    인증
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </DialogActions>
+            </>
+          ) : (
+            <DialogContent
+              style={{
+                width: "300px",
+                height: "350px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress color="inherit" />
+            </DialogContent>
+          )}
+        </Dialog>{" "}
+      </>
       <ReviewContainer>
         {spotData.review &&
           spotData.review.map((item: any, i: any) => {
