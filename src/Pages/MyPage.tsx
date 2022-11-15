@@ -11,15 +11,12 @@ import { BASE_URL } from "../API/Common";
 import { getUserInfo } from "../API/User/User";
 import MyPageLikeSpot from "../Components/User/MyPageLikeSpot";
 import MyPageLikeAssay from "../Components/User/MyPageLikeAssay";
-import { ResponsiveBullet } from "@nivo/bullet";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogContentText,
   DialogActions,
-  CircularProgress,
-  TextField,
   Button,
 } from "@mui/material";
 
@@ -178,6 +175,35 @@ const ExpText = styled.div`
   }
 `;
 
+const GraphDiv = styled.div`
+  height: 40px;
+  background-color: #ccc;
+  border-radius: 20px;
+`;
+
+const GraphSpan = styled.div<{ width: any }>`
+  display: block;
+  padding: 0 10px;
+  width: ${({ width }) => width}%;
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+  background-color: skyblue;
+  border-radius: 20px;
+  box-sizing: border-box;
+  color: #fff;
+  animation: stack 2s 1;
+
+  @keyframes stack {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: ${({ width }) => width}%;
+    }
+  }
+`;
+
 const DialogImgDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -237,10 +263,8 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
           logout();
         }
       }
+
       setUserData(data.json.data);
-      setGraphData([
-        { id: "exp", ranges: [0, 100], measures: data.json.data.userExp },
-      ]);
     };
     getUser();
   }, []);
@@ -256,13 +280,13 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
             </ImgContainer>
             <UserContainer>
               <UserBox>
-                <UserName>{userData.userName}</UserName>
-                <Lv>Lv. {userData.userLevel} </Lv>
+                <UserName>{userData?.userName}</UserName>
+                <Lv>Lv. {userData?.userLevel} </Lv>
               </UserBox>
               <UserCharacterBox>
-                <UserCharacterImg src={`/img/level${userData.ch_idx}.png`} />
+                <UserCharacterImg src={`/img/level${userData?.ch_idx}.png`} />
                 <UserCharacterExplain>
-                  {userData.Character && userData.Character.ch_name}
+                  {userData?.Character?.ch_name}
                   <Button
                     style={{ marginTop: "10px" }}
                     onClick={() => {
@@ -298,16 +322,22 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
         <DialogContent style={{ width: "300px", height: "380px" }}>
           <DialogContentText>
             <DialogImgDiv>
-              <DialogImg src={`/img/level${userData.ch_idx}.png`}></DialogImg>
+              <DialogImg src={`/img/level${userData?.ch_idx}.png`}></DialogImg>
             </DialogImgDiv>
             <DialogTextDiv>
-              <DialogHeaderDiv>
-                {userData.Character && userData.Character.ch_name}
-              </DialogHeaderDiv>
-              <DialogLvDiv>LV.{userData.userLevel}</DialogLvDiv>
+              <DialogHeaderDiv>{userData?.Character?.ch_name}</DialogHeaderDiv>
+              <DialogLvDiv>LV.{userData?.userLevel}</DialogLvDiv>
               <DialogGraphDiv>
                 <div>Exp.</div>
                 <div></div>
+                <GraphDiv>
+                  <GraphSpan width={userData?.userExp?.toString()}>
+                    {userData?.userExp?.toString() === "0"
+                      ? "0"
+                      : userData?.userExp?.toString()}
+                    %
+                  </GraphSpan>
+                </GraphDiv>
               </DialogGraphDiv>
             </DialogTextDiv>
           </DialogContentText>
