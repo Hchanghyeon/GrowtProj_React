@@ -628,7 +628,7 @@ const SectionSpotInfo = () => {
         <CommentContainer>
           <Box style={{ display: "flex", paddingBottom: "20px" }}>
             <Typography style={{ fontSize: "16px" }} component="legend">
-              평점
+              <span>평점</span>
             </Typography>
             <Rating
               name="simple-controlled"
@@ -688,7 +688,7 @@ const SectionSpotInfo = () => {
                 variant="contained"
                 color="success"
               >
-                {locationBtnText}
+                <span>{locationBtnText}</span>
               </Button>
             )}
             {accessToken ? (
@@ -699,7 +699,7 @@ const SectionSpotInfo = () => {
                   color="success"
                   onClick={submitReview}
                 >
-                  등록
+                  <span>등록</span>
                 </Button>
               ) : (
                 <Button
@@ -709,7 +709,7 @@ const SectionSpotInfo = () => {
                   onClick={submitReview}
                   disabled
                 >
-                  등록
+                  <span>등록</span>
                 </Button>
               )
             ) : (
@@ -720,13 +720,15 @@ const SectionSpotInfo = () => {
                 onClick={submitReview}
                 disabled
               >
-                등록
+                <span>등록</span>
               </Button>
             )}
           </CommentButtonDiv>
         </CommentContainer>
         <Dialog open={modal}>
-          <DialogTitle id="responsive-dialog-title">관광지 인증</DialogTitle>
+          <DialogTitle id="responsive-dialog-title">
+            <span>관광지 인증</span>
+          </DialogTitle>
           {nowState ? (
             <>
               <DialogContent style={{ width: "300px", height: "380px" }}>
@@ -743,14 +745,14 @@ const SectionSpotInfo = () => {
               <DialogActions>
                 {cancel ? (
                   <Button autoFocus onClick={handleClose}>
-                    취소
+                    <div>취소</div>
                   </Button>
                 ) : (
                   <></>
                 )}
                 {btn ? (
                   <Button onClick={handleLocationAuth} autoFocus>
-                    인증
+                    <div>인증</div>
                   </Button>
                 ) : (
                   <></>
