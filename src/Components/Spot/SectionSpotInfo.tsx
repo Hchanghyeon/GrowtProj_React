@@ -6,6 +6,7 @@ import {
   faLandmark,
   faLocationDot,
   faStar,
+  faPlusCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { getSpotInfoData, addSpotReview } from "../../API/Spot/Spot";
@@ -27,6 +28,38 @@ import {
 } from "@mui/material";
 import { DistanceKm } from "../../Service/MapUtil";
 import { BASE_URL } from "../../API/Common";
+import axios from "axios";
+
+const ImgContainer2 = styled.div`
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  height: 300px;
+  border-style: solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-color: silver;
+  border-width: 1px;
+`;
+
+const Img = styled.div`
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-size: 100% 100%;
+  line-height: 300px;
+`;
+
+const ImgPlusBtn = styled.button`
+  border-style: none;
+  background-color: white;
+
+  #plus {
+    font-size: 24px;
+    color: #83b551;
+  }
+`;
 
 const SectionContainer = styled.div`
   margin-top: 20px;
@@ -176,6 +209,10 @@ const ImgSpot = styled.div`
   @media screen and (max-width: 768px) {
     right: 30px;
   }
+`;
+
+const InputFile = styled.input`
+  visibility: hidden;
 `;
 
 const ImgIconData = styled.div`
@@ -371,7 +408,10 @@ const SectionSpotInfo = () => {
   const [reviewState, setReviewState] = useState<boolean>(false);
   const [loginState, setLoginState] = useState<boolean>(true);
 
-  // 리뷰 출력 데이터
+  // 인공지능 인식
+  const [imageModal, setImageModal] = useState<boolean>(false);
+  const [textExplain, setTextExplain] = useState("이미지를 넣어주세요");
+  const [files, setFiles] = useState<any>("");
 
   // 로그아웃
   const dispatch = useDispatch();
@@ -380,6 +420,59 @@ const SectionSpotInfo = () => {
     setTimeout(() => {
       window.location.href = "/";
     }, 200);
+  };
+
+  useEffect((): any => {
+    preview();
+  }, [files]);
+
+  const preview = () => {
+    if (!files) return false;
+    const imgEL: any = document.querySelector(".img_box");
+    const reader = new FileReader();
+    reader.onload = () => {
+      setTextExplain("");
+      imgEL.style.backgroundImage = `url(${reader.result})`;
+    };
+    reader.readAsDataURL(files[0]);
+    submitData();
+  };
+
+  const onLoadFile = (e: any) => {
+    const file = e.target.files;
+    if (file && file[0]["type"].split("/")[0] === "image") {
+      setFiles(file);
+    } else {
+      alert("파일이 이미지가 아닙니다. 다시 선택해주세요");
+    }
+  };
+
+  const submitData = async () => {
+    const formData = new FormData();
+    formData.append("image", files[0]);
+
+    let test: any;
+    let result: any;
+    let error: boolean = false;
+    try {
+      test = await axios.post(
+        `https://whitegreen.synology.me:8282/predict`,
+        formData,
+        {
+          headers: {
+            "content-type": "multipart/form-data",
+          },
+        }
+      );
+      result = test.response;
+    } catch (err) {
+      error = true;
+      alert(err);
+    }
+
+    if (!error) {
+      alert(result);
+    }
   };
 
   useEffect(() => {
@@ -460,6 +553,11 @@ const SectionSpotInfo = () => {
     setModal(false);
   };
 
+  // 지도 모달 취소 버튼 클릭시 닫기
+  const handleImgModalClose = () => {
+    setImageModal(false);
+  };
+
   // 리뷰 등록 버튼 클릭
   const submitReview = async () => {
     // id 로 sendData 추가
@@ -481,6 +579,10 @@ const SectionSpotInfo = () => {
       setLocationAuth(false);
       setReviewState(!reviewState);
     }
+  };
+
+  const imageCheck = () => {
+    setImageModal(!imageModal);
   };
 
   const locationCheck = () => {
@@ -691,6 +793,15 @@ const SectionSpotInfo = () => {
                 <span>{locationBtnText}</span>
               </Button>
             )}
+            <Button
+              style={{ marginLeft: "5px" }}
+              onClick={imageCheck}
+              variant="contained"
+              color="success"
+            >
+              <span>랜드마크인증</span>
+            </Button>
+
             {accessToken ? (
               loginState ? (
                 <Button
@@ -774,6 +885,32 @@ const SectionSpotInfo = () => {
           )}
         </Dialog>{" "}
       </>
+      <Dialog open={imageModal}>
+        <DialogTitle id="responsive-dialog-title">
+          <span>랜드마크 인증</span>
+        </DialogTitle>
+        <DialogContent style={{ width: "300px", height: "480px" }}>
+          <DialogContentText>
+            <ImgContainer2>
+              <Img className="img_box">{textExplain}</Img>
+            </ImgContainer2>
+            <InputFile type="file" id="image" onChange={onLoadFile} />
+            <ImgPlusBtn>
+              <label htmlFor="image">
+                <FontAwesomeIcon id="plus" icon={faPlusCircle} />
+              </label>
+            </ImgPlusBtn>
+          </DialogContentText>
+          <DialogActions>
+            <Button autoFocus onClick={handleImgModalClose}>
+              <div>취소</div>
+            </Button>
+            <Button onClick={handleLocationAuth} autoFocus>
+              <div>인증</div>
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
       <ReviewContainer>
         {spotData.review &&
           spotData.review.map((item: any, i: any) => {
