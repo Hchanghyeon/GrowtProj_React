@@ -58,22 +58,22 @@ const LoginModalContainer = styled.div`
 `;
 
 const LoginHeader = styled.div`
-  height:70px;
-  width:100%;
-  border-bottom-style:solid;
-  border-bottom-color:silver;
-  border-bottom-width:1px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  height: 70px;
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom-color: silver;
+  border-bottom-width: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  top:0px;
+  top: 0px;
 
   #Xbtn {
-    font-size:13px;
-    position:absolute;
-    left:20px;
-src/API/User/User.ts  }
+    font-size: 13px;
+    position: absolute;
+    left: 20px;
+  }
 `;
 
 const LoginHeaderText = styled.div`

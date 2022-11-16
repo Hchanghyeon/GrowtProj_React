@@ -29,7 +29,7 @@ const Img = styled.img`
 
 const ImgContainer = styled.div`
   max-width: 300px;
-  width: 100%%;
+  width: 100%;
   height: 200px;
   @media screen and (max-width: 768px) {
     max-width: 100px;
@@ -128,7 +128,7 @@ const HeaderAssay = ({ setUserMatch, userLoginBtn, changeLoginState }: any) => {
       </ImgContainer>
       <UserContainer>
         <UserName>{userData.userName}님</UserName>
-        <Lv>Lv. 20 </Lv>
+        <Lv>Lv. {userData.userLevel}</Lv>
       </UserContainer>
       {userLoginState ? (
         <Atag onClick={logout}>로그아웃</Atag>

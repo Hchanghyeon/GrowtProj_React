@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faLandmark, faStar } from "@fortawesome/free-solid-svg-icons";
 import * as fetchSpot from "../../API/Spot/Spot";
 import Loading from "../Loading/Loading";
 import LoadingSpot from "../Loading/LoadingSpot";
@@ -157,6 +157,19 @@ const SectionSpot = (userClickBtn: any) => {
               <TextHeader>
                 <TextTitle>{item.title}</TextTitle>
                 <TextLike>
+                  {item.landmark ? (
+                    <FontAwesomeIcon
+                      icon={faLandmark}
+                      style={{
+                        marginRight: "5px",
+
+                        color: "#faaf00",
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+
                   <FontAwesomeIcon
                     icon={faStar}
                     style={{

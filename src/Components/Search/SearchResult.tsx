@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getSpotSearch, getTagSearch } from "../../API/Spot/Spot";
 import { getAssaySearch } from "../../API/Assay/Assay";
-import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faStar, faLandmark } from "@fortawesome/free-solid-svg-icons";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { BASE_URL } from "../../API/Common";
@@ -202,6 +202,19 @@ const SearchResult = () => {
                     </ResultTag>
                   </ResultTitle>
                   <ResultLike>
+                    {item.landmark ? (
+                      <FontAwesomeIcon
+                        icon={faLandmark}
+                        style={{
+                          marginRight: "5px",
+
+                          color: "#faaf00",
+                        }}
+                      />
+                    ) : (
+                      <></>
+                    )}
+
                     <FontAwesomeIcon
                       icon={faStar}
                       style={{

@@ -26,6 +26,8 @@ import {
   DialogActions,
   CircularProgress,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SendIcon from "@mui/icons-material/Send";
 import { DistanceKm } from "../../Service/MapUtil";
 import { BASE_URL } from "../../API/Common";
 import axios from "axios";
@@ -51,6 +53,30 @@ const Img = styled.div`
   line-height: 300px;
 `;
 
+const ImgContainer3 = styled.div`
+  position: relative;
+  max-width: 400px;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Img2 = styled.div`
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background-size: 100% 100%;
+  line-height: 300px;
+`;
+
+const ImgSrc = styled.img`
+  width: 300px;
+  height: 250px;
+  margin-bottom: 10px;
+`;
+
 const ImgPlusBtn = styled.button`
   border-style: none;
   background-color: white;
@@ -69,6 +95,20 @@ const SectionContainer = styled.div`
   align-items: center;
   flex-direction: column;
   margin-bottom: 100px;
+`;
+
+const ContainerExplain = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+`;
+
+const ImagePercent = styled.div`
+  width: 100%;
+  font-size: 13px;
+  padding-left: 10px;
+  color: black;
+  margin-bottom: 5px;
 `;
 
 const SpotInfoContainer = styled.div`
@@ -249,6 +289,8 @@ const SpotInfomation = styled.div`
   padding-right: 10px;
 `;
 
+const TestBtn = styled.button``;
+
 const SpotCategory = styled.div`
   font-weight: bold;
   margin-bottom: 5px;
@@ -358,6 +400,7 @@ const ReviewAuth = styled.div`
   font-size: 13px;
   margin-top: 10px;
   padding-left: 5px;
+  display: flex;
   color: silver;
 `;
 
@@ -381,6 +424,36 @@ const SpotTextContent = styled.div`
 const SpotTextNotice = styled.div`
   font-size: 12px;
   font-weight: bold;
+`;
+
+const TextHeaderContianer = styled.div`
+  margin-bottom: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+`;
+
+const AddImageDiv = styled.div`
+  width: 100%;
+  margin-bottom: 5px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ImageBtnDiv = styled.div`
+  width: 100%;
+  margin-bottom: 5px;
+  align-items: center;
+  display: flex;
+  justify-content: end;
+`;
+
+const CompleteExplain = styled.div`
+  width: 100%;
+  font-size: 15%;
+  padding-left: 10px;
+  color: orange;
 `;
 
 const SectionSpotInfo = () => {
@@ -412,6 +485,14 @@ const SectionSpotInfo = () => {
   const [imageModal, setImageModal] = useState<boolean>(false);
   const [textExplain, setTextExplain] = useState("이미지를 넣어주세요");
   const [files, setFiles] = useState<any>("");
+  const [imageBtn, setImageBtn] = useState("이미지 인증");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [authCom, setAuthCom] = useState<boolean>(false);
+  const [authBtn, setAuthBtn] = useState<boolean>(false);
+  const [complete, setComplete] = useState<boolean>(false);
+  const [completeExplain, setCompleteExplain] = useState<string>("");
+  const [imageBtnState, setImageBtnState] = useState<boolean>(false);
+  const [imageBtnText, setImageBtnText] = useState<string>("랜드마크인증");
 
   // 로그아웃
   const dispatch = useDispatch();
@@ -426,6 +507,19 @@ const SectionSpotInfo = () => {
     preview();
   }, [files]);
 
+  const toggleBtn = () => {
+    setLoading(false);
+    setAuthCom(true);
+    const result = 80;
+
+    if (result > 70) {
+      setComplete(true);
+    } else {
+      setComplete(false);
+      setCompleteExplain("유사도가 70%를 넘지 못하여 인증 할 수 없습니다");
+    }
+  };
+
   const preview = () => {
     if (!files) return false;
     const imgEL: any = document.querySelector(".img_box");
@@ -435,10 +529,10 @@ const SectionSpotInfo = () => {
       imgEL.style.backgroundImage = `url(${reader.result})`;
     };
     reader.readAsDataURL(files[0]);
-    submitData();
   };
 
   const onLoadFile = (e: any) => {
+    setAuthBtn(true);
     const file = e.target.files;
     if (file && file[0]["type"].split("/")[0] === "image") {
       setFiles(file);
@@ -456,7 +550,7 @@ const SectionSpotInfo = () => {
     let error: boolean = false;
     try {
       test = await axios.post(
-        `https://whitegreen.synology.me:8282/predict`,
+        `http://whitegreen.synology.me:8283/predict`,
         formData,
         {
           headers: {
@@ -465,6 +559,8 @@ const SectionSpotInfo = () => {
         }
       );
       result = test.response;
+      console.log(result);
+      setLoading(false);
     } catch (err) {
       error = true;
       alert(err);
@@ -548,6 +644,13 @@ const SectionSpotInfo = () => {
     setModal(false);
   };
 
+  const handleImageAuth = () => {
+    setImageModal(false);
+    setImageBtnText("랜드마크인증됨");
+    setImageBtnState(true);
+    setLandmarkAuth(true);
+  };
+
   // 지도 모달 취소 버튼 클릭시 닫기
   const handleClose = () => {
     setModal(false);
@@ -556,6 +659,14 @@ const SectionSpotInfo = () => {
   // 지도 모달 취소 버튼 클릭시 닫기
   const handleImgModalClose = () => {
     setImageModal(false);
+    setFiles("");
+    setTextExplain("이미지를 넣어주세요");
+    setImageBtn("이미지 인증");
+    setLoading(false);
+    setAuthCom(false);
+    setAuthBtn(false);
+    setComplete(false);
+    setCompleteExplain("");
   };
 
   // 리뷰 등록 버튼 클릭
@@ -569,7 +680,6 @@ const SectionSpotInfo = () => {
       landmarkAuth,
       starValue: value,
     };
-
     const result = await addSpotReview(id, sendData);
 
     if (result.json.result === "ok") {
@@ -578,7 +688,23 @@ const SectionSpotInfo = () => {
       setLocationBtnState(false);
       setLocationAuth(false);
       setReviewState(!reviewState);
+      setFiles("");
+      setTextExplain("이미지를 넣어주세요");
+      setImageBtn("이미지 인증");
+      setLoading(false);
+      setAuthCom(false);
+      setAuthBtn(false);
+      setComplete(false);
+      setCompleteExplain("");
+      setImageBtn("랜드마크인증");
+      setImageBtnState(false);
     }
+  };
+
+  const authPicture = () => {
+    setLoading(true);
+    setImageBtn("유사도 측정중");
+    submitData();
   };
 
   const imageCheck = () => {
@@ -661,7 +787,20 @@ const SectionSpotInfo = () => {
         <ImgContainer>
           <SpotImg src={spotData.imgpath}></SpotImg>
           <ImgSpot>
-            <ImgIconHeart>
+            <ImgIconHeart key={5}>
+              {spotData.landmark ? (
+                <FontAwesomeIcon
+                  icon={faLandmark}
+                  style={{
+                    color: "#faaf00",
+                    marginRight: "10px",
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+            </ImgIconHeart>
+            <ImgIconHeart key={2}>
               <FontAwesomeIcon
                 icon={faStar}
                 style={{
@@ -669,13 +808,13 @@ const SectionSpotInfo = () => {
                 }}
               />
             </ImgIconHeart>
-            <ImgIconData>
+            <ImgIconData key={1}>
               {spotData.starNum <= 0 ? 0 : spotData.starNum}
             </ImgIconData>
-            <ImgIconHeart>
+            <ImgIconHeart key={3}>
               <FontAwesomeIcon icon={faHeart} />
             </ImgIconHeart>
-            <ImgIconData>{spotData.likeNum}</ImgIconData>
+            <ImgIconData key={4}>{spotData.likeNum}</ImgIconData>
           </ImgSpot>
         </ImgContainer>
         <ContentContainer>
@@ -793,14 +932,27 @@ const SectionSpotInfo = () => {
                 <span>{locationBtnText}</span>
               </Button>
             )}
-            <Button
-              style={{ marginLeft: "5px" }}
-              onClick={imageCheck}
-              variant="contained"
-              color="success"
-            >
-              <span>랜드마크인증</span>
-            </Button>
+
+            {imageBtnState ? (
+              <Button
+                style={{ marginLeft: "5px" }}
+                onClick={imageCheck}
+                variant="contained"
+                color="success"
+                disabled
+              >
+                <span>{imageBtnText}</span>
+              </Button>
+            ) : (
+              <Button
+                style={{ marginLeft: "5px" }}
+                onClick={imageCheck}
+                variant="contained"
+                color="success"
+              >
+                <span>{imageBtnText}</span>
+              </Button>
+            )}
 
             {accessToken ? (
               loginState ? (
@@ -889,25 +1041,86 @@ const SectionSpotInfo = () => {
         <DialogTitle id="responsive-dialog-title">
           <span>랜드마크 인증</span>
         </DialogTitle>
-        <DialogContent style={{ width: "300px", height: "480px" }}>
-          <DialogContentText>
-            <ImgContainer2>
-              <Img className="img_box">{textExplain}</Img>
-            </ImgContainer2>
-            <InputFile type="file" id="image" onChange={onLoadFile} />
-            <ImgPlusBtn>
-              <label htmlFor="image">
-                <FontAwesomeIcon id="plus" icon={faPlusCircle} />
-              </label>
-            </ImgPlusBtn>
+        <DialogContent
+          style={{ maxWidth: "300px", width: "100%", height: "480px" }}
+        >
+          <DialogContentText style={{ width: "100%" }}>
+            <TextHeaderContianer>{spotData.title}</TextHeaderContianer>
+
+            {loading || authCom ? (
+              <ImgContainer3>
+                <ImgSrc src={spotData.imgpath}></ImgSrc>
+              </ImgContainer3>
+            ) : (
+              <>
+                <ImgContainer2>
+                  <Img className="img_box">{textExplain}</Img>
+                </ImgContainer2>
+                <InputFile type="file" id="image" onChange={onLoadFile} />
+                <AddImageDiv>
+                  <ImgPlusBtn>
+                    <label htmlFor="image" style={{ cursor: "pointer" }}>
+                      <FontAwesomeIcon
+                        style={{ marginRight: "10px", fontSize: "20px" }}
+                        id="plus"
+                        icon={faPlusCircle}
+                      />
+                      이미지 추가
+                    </label>
+                  </ImgPlusBtn>
+                </AddImageDiv>
+              </>
+            )}
+
+            {loading ? (
+              <>
+                {" "}
+                <ContainerExplain>
+                  사진에 따라 몇 분 소요될 수 있습니다
+                </ContainerExplain>
+                <hr></hr>{" "}
+              </>
+            ) : (
+              <></>
+            )}
+            {authCom ? (
+              <>
+                <ImagePercent> 랜드마크 유사도 : %</ImagePercent>
+              </>
+            ) : (
+              <></>
+            )}
+            <CompleteExplain>{completeExplain}</CompleteExplain>
+            {authCom || !authBtn ? (
+              <></>
+            ) : (
+              <ImageBtnDiv>
+                <LoadingButton
+                  size="small"
+                  onClick={authPicture}
+                  endIcon={<SendIcon />}
+                  loading={loading}
+                  loadingPosition="end"
+                  variant="contained"
+                >
+                  <span>{imageBtn}</span>
+                </LoadingButton>
+              </ImageBtnDiv>
+            )}
+
+            <TestBtn onClick={toggleBtn}>test</TestBtn>
           </DialogContentText>
           <DialogActions>
-            <Button autoFocus onClick={handleImgModalClose}>
+            <Button size="small" autoFocus onClick={handleImgModalClose}>
               <div>취소</div>
             </Button>
-            <Button onClick={handleLocationAuth} autoFocus>
-              <div>인증</div>
-            </Button>
+            {complete ? (
+              <Button size="small" onClick={handleImageAuth} autoFocus>
+                <div>인증</div>
+              </Button>
+            ) : (
+              <></>
+            )}
           </DialogActions>
         </DialogContent>
       </Dialog>
@@ -938,12 +1151,12 @@ const SectionSpotInfo = () => {
                       <></>
                     )}
                     {item.landmarkAuth ? (
-                      <div style={{ color: "blue" }}>
+                      <div style={{ color: "orange" }}>
                         <FontAwesomeIcon
-                          style={{ marginRight: "3px" }}
+                          style={{ marginLeft: "10px", marginRight: "3px" }}
                           icon={faLandmark}
                         ></FontAwesomeIcon>
-                        위치인증
+                        랜드마크 인증
                       </div>
                     ) : (
                       <></>
