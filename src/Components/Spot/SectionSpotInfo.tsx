@@ -544,21 +544,21 @@ const SectionSpotInfo = () => {
   const submitData = async () => {
     const formData = new FormData();
     formData.append("image", files[0]);
+    formData.append("contentsid", id);
 
     let test: any;
     let result: any;
     let error: boolean = false;
     try {
-      test = await axios.post(
-        `http://whitegreen.synology.me:8283/predict`,
-        formData,
-        {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        }
-      );
-      result = test.response;
+      test = await fetch(`https://whitegreen.synology.me:8282/predict`, {
+        method: "post",
+        mode: "no-cors", // no-cors,
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+        body: formData,
+      });
+      result = await test.json();
       console.log(result);
       setLoading(false);
     } catch (err) {
