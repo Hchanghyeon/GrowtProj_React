@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 import { getSpotInfoData, addSpotReview } from "../../API/Spot/Spot";
 import { useSelector } from "react-redux";
 import { getChangeLikeState, checkSpotLike } from "../../API/Spot/Spot";
+import { getUserExpData } from "../../API/User/User";
 import { TextField, Button } from "@mui/material";
 import { DELETE_USER } from "../../Store/User/User";
 import { useDispatch } from "react-redux";
@@ -582,6 +583,7 @@ const SectionSpotInfo = () => {
       }
 
       setSpotData(spotInfoData.json[0]);
+
       if (accessToken) {
         const result: any = await checkSpotLike(id, accessToken);
         if (result.code === 200) {
@@ -591,12 +593,8 @@ const SectionSpotInfo = () => {
         }
       } else {
       }
-
-      console.log(spotInfoData.json[0].review.length);
-
       if (spotInfoData.json[0].review.length !== 0) {
         for (let i = 0; i < spotInfoData.json[0].review.length; i++) {
-          console.log(spotInfoData.json[0].review[i].userId);
           if (spotInfoData.json[0].review[i].userId === userId) {
             setLoginState(false);
           }
@@ -1140,7 +1138,9 @@ const SectionSpotInfo = () => {
                   <ReviewComment>{item.review}</ReviewComment>
                   <ReviewAuth>
                     {item.locationAuth ? (
-                      <div style={{ color: "yellowgreen" }}>
+                      <div
+                        style={{ color: "yellowgreen", marginRight: "10px" }}
+                      >
                         <FontAwesomeIcon
                           style={{ marginRight: "3px" }}
                           icon={faLocationDot}
@@ -1153,7 +1153,7 @@ const SectionSpotInfo = () => {
                     {item.landmarkAuth ? (
                       <div style={{ color: "orange" }}>
                         <FontAwesomeIcon
-                          style={{ marginLeft: "10px", marginRight: "3px" }}
+                          style={{ marginRight: "3px" }}
                           icon={faLandmark}
                         ></FontAwesomeIcon>
                         랜드마크 인증

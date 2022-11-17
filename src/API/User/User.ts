@@ -1,100 +1,108 @@
 import { response } from "../Common";
 
+export const sendEmail = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response("user/sendEmail", option);
+};
 
-export const sendEmail = async (credentials:any) => {
-    const option = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        body: JSON.stringify(credentials)
-    };
-    return await response("user/sendEmail", option);
-}
+export const getUserInfo = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response("user/info", option);
+};
 
-export const getUserInfo = async (credentials:any) => {
-    const option = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        body: JSON.stringify(credentials)
-    };
-    return await response("user/info", option);
-}
+export const checkUser = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
+  return await response("user/userIdCheck", option);
+};
 
+export const signin = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
 
-export const checkUser = async (credentials:any) => {
-    const option = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        body: JSON.stringify(credentials)
-    };
-    return await response("user/userIdCheck", option);
-}
+  return await response("user/userLogin", option);
+};
 
-export const signin = async (credentials:any) => {
-    const option = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        body: JSON.stringify(credentials)
-    };
+export const signup = async (credentials: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
 
-    return await response("user/userLogin", option);
-}
+  return await response("user/userRegister/", option);
+};
 
-export const signup = async (credentials:any) => {
-    const option = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-        body: JSON.stringify(credentials)
-    };
+export const signout = async (credentials: any, accessToken: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
 
-    return await response("user/userRegister/", option);
-}
+  return await response("users/logout/", option);
+};
 
+export const whoami = async (accessToken: any) => {
+  const option = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+  };
 
-export const signout = async (credentials:any, accessToken:any) => {
-    const option = {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify(credentials)
-    };
+  return await response("users/", option);
+};
 
-    return await response("users/logout/", option);
-}
+export const renew = async (credentials: any, accessToken: any) => {
+  const option = {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+    body: JSON.stringify(credentials),
+  };
 
-export const whoami = async (accessToken:any) => {
-    const option = {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json;charset=UTF-8'
-        }
-    };
+  return await response("users/", option);
+};
 
-    return await response("users/", option);
-}
+export const getUserExpData = async (accessToken: any) => {
+  const option = {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+  };
 
-
-export const renew = async (credentials:any, accessToken:any) => {
-    const option = {
-        method: 'PUT',
-        headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json;charset=UTF-8'
-        },
-        body: JSON.stringify(credentials)
-    };
-
-    return await response("users/", option);
-}
+  return await response("user/expData", option);
+};
