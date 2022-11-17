@@ -10,6 +10,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { getChangeLikeState, getUserLike } from "../API/Spot/Spot";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 
 const FeedContainer = styled.div`
   max-width: 400px;
@@ -122,6 +127,25 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
   const [assayData, setAssayData] = useState<any>([]);
   const accessToken = useSelector((state: any) => state.user.accessToken);
   const [state, setState] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [openText, setOpenText] = useState(false);
+  const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   useEffect(() => {
     const start = async () => {
@@ -147,9 +171,29 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
     if (result.code === 401) {
       alert("로그인이 필요합니다");
     } else {
+      if (result.json.result === 1) {
+        setOpen(true);
+        setOpenText(false);
+      } else {
+        setOpen(true);
+        setOpenText(true);
+      }
       setState(!state);
     }
   };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <MyPageContainer>
@@ -210,6 +254,34 @@ const AssayList = ({ userLoginBtn, changeLoginState }: any) => {
           );
         })}
       </FeedContainer>
+      {openText ? (
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          action={action}
+        >
+          <Alert severity="warning">
+            좋아요를 누른 상대방의 경험치가 -1 되었습니다
+          </Alert>
+        </Snackbar>
+      ) : (
+        <Snackbar
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          action={action}
+        >
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            좋아요를 누른 상대방의 경험치가 +1 되었습니다
+          </Alert>
+        </Snackbar>
+      )}
+
       <LoginModal
         changeLoginState={changeLoginState}
         userLoginBtn={userLoginBtn}

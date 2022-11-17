@@ -8,7 +8,7 @@ import { DELETE_USER } from "../Store/User/User";
 import LoginModal from "../Components/User/LoginModal";
 import styled from "styled-components";
 import { BASE_URL } from "../API/Common";
-import { getUserInfo } from "../API/User/User";
+import { getUserInfo, getUserExpData } from "../API/User/User";
 import MyPageLikeSpot from "../Components/User/MyPageLikeSpot";
 import MyPageLikeAssay from "../Components/User/MyPageLikeAssay";
 import {
@@ -19,6 +19,12 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart,
+  faLandmark,
+  faLocation,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Atag = styled.a`
   position: absolute;
@@ -175,6 +181,27 @@ const ExpText = styled.div`
   }
 `;
 
+const ExpList = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const ExpData = styled.div`
+  width: 100%;
+  height: 20px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: black;
+`;
+
+const ExpHeader = styled.div`
+  width: 100%;
+  height: 30px;
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  margin-top: 20px;
+`;
 const GraphDiv = styled.div`
   height: 40px;
   background-color: #ccc;
@@ -210,12 +237,12 @@ const DialogImgDiv = styled.div`
   align-items: center;
   width: 90%;
   margin: 0px auto;
-  height: 250px;
+  height: 200px;
 `;
 
 const DialogImg = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
 `;
 
 const DialogTextDiv = styled.div``;
@@ -235,6 +262,7 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
   const accessToken = useSelector((state: any) => state.user.accessToken);
   const [graphData, setGraphData] = useState<any>([]);
   const [modal, setModal] = useState<boolean>(false);
+  const [expData, setExpData] = useState<any>([]);
 
   const [userData, setUserData] = useState<any>({});
 
@@ -261,6 +289,9 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
       if (accessToken) {
         if (data.code === 401) {
           logout();
+        } else {
+          const exp = await getUserExpData(accessToken);
+          setExpData(exp.json.result);
         }
       }
 
@@ -325,10 +356,14 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
               <DialogImg src={`/img/level${userData?.ch_idx}.png`}></DialogImg>
             </DialogImgDiv>
             <DialogTextDiv>
-              <DialogHeaderDiv>{userData?.Character?.ch_name}</DialogHeaderDiv>
-              <DialogLvDiv>LV.{userData?.userLevel}</DialogLvDiv>
+              <DialogHeaderDiv style={{ color: "black" }}>
+                {userData?.Character?.ch_name}
+              </DialogHeaderDiv>
+              <DialogLvDiv style={{ color: "black", fontSize: "14px" }}>
+                LV.{userData?.userLevel}
+              </DialogLvDiv>
               <DialogGraphDiv>
-                <div>Exp.</div>
+                <div style={{ color: "black", fontSize: "14px" }}>Exp.</div>
                 <div></div>
                 <GraphDiv>
                   <GraphSpan width={userData?.userExp?.toString()}>
@@ -338,6 +373,85 @@ const MyPage = ({ userLoginBtn, changeLoginState }: any) => {
                     %
                   </GraphSpan>
                 </GraphDiv>
+                <ExpHeader>경험치 내역</ExpHeader>
+                <ExpList>
+                  {expData?.map((item: any, i: number) => {
+                    return (
+                      <ExpData>
+                        {item.category === "review" && item.score === 5 ? (
+                          <span>
+                            {" "}
+                            <FontAwesomeIcon
+                              style={{ marginRight: "5px", color: "orange" }}
+                              icon={faLandmark}
+                            ></FontAwesomeIcon>
+                            랜드마크 인증{" "}
+                            <span
+                              style={{ marginLeft: "3px", marginRight: "15px" }}
+                            >
+                              +5
+                            </span>
+                            <span style={{ color: "silver" }}>{item.time}</span>
+                          </span>
+                        ) : (
+                          <></>
+                        )}
+                        {item.category === "review" && item.score === 3 ? (
+                          <span>
+                            {" "}
+                            <FontAwesomeIcon
+                              style={{ marginRight: "5px", color: "green" }}
+                              icon={faLocation}
+                            ></FontAwesomeIcon>
+                            GPS 인증{" "}
+                            <span
+                              style={{ marginLeft: "3px", marginRight: "15px" }}
+                            >
+                              +3
+                            </span>
+                            <span style={{ color: "silver" }}>{item.time}</span>
+                          </span>
+                        ) : (
+                          <></>
+                        )}
+                        {item.category === "assayLike" && item.score === -1 ? (
+                          <span>
+                            {item.likeId}님의{" "}
+                            <FontAwesomeIcon
+                              style={{ color: "silver" }}
+                              icon={faHeart}
+                            ></FontAwesomeIcon>{" "}
+                            <span
+                              style={{ marginLeft: "3px", marginRight: "15px" }}
+                            >
+                              -1
+                            </span>
+                            <span style={{ color: "silver" }}>{item.time}</span>
+                          </span>
+                        ) : (
+                          <></>
+                        )}
+                        {item.category === "assayLike" && item.score === 1 ? (
+                          <span>
+                            {item.likeId}님의{" "}
+                            <FontAwesomeIcon
+                              style={{ color: "pink" }}
+                              icon={faHeart}
+                            ></FontAwesomeIcon>{" "}
+                            <span
+                              style={{ marginLeft: "3px", marginRight: "15px" }}
+                            >
+                              +1
+                            </span>
+                            <span style={{ color: "silver" }}>{item.time}</span>
+                          </span>
+                        ) : (
+                          <></>
+                        )}
+                      </ExpData>
+                    );
+                  })}
+                </ExpList>
               </DialogGraphDiv>
             </DialogTextDiv>
           </DialogContentText>
