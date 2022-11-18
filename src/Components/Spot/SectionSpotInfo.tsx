@@ -538,7 +538,9 @@ const SectionSpotInfo = () => {
       setComplete(true);
     } else {
       setComplete(false);
-      setCompleteExplain("유사도가 70%를 넘지 못하여 인증 할 수 없습니다");
+      setCompleteExplain(
+        "인공지능으로 판별한 이미지 유사도가 70%를 넘지 못하여 인증 할 수 없습니다"
+      );
     }
   };
 
@@ -609,7 +611,9 @@ const SectionSpotInfo = () => {
           setComplete(true);
         } else {
           setComplete(false);
-          setCompleteExplain("유사도가 70%를 넘지 못하여 인증 할 수 없습니다");
+          setCompleteExplain(
+            "인공지능으로 인식한 이미지 유사도가 70%를 넘지 못하여 인증 할 수 없습니다"
+          );
         }
       }
     }
@@ -744,7 +748,7 @@ const SectionSpotInfo = () => {
 
   const authPicture = () => {
     setLoading(true);
-    setImageBtn("유사도 측정중");
+    setImageBtn("AI 판별중");
     submitData();
   };
 
