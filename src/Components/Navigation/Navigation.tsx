@@ -54,7 +54,7 @@ const BarMenu = styled.a`
 `;
 
 const BarIcon = styled.div`
-  text-algin: center;
+  text-align: center;
   font-size: 20px;
   @media screen and (max-width: 768px) {
     font-size: 17px;
@@ -65,7 +65,7 @@ const BarText = styled.div`
   text-align: center;
   font-size: 14px;
   @media screen and (max-width: 768px) {
-    font-size: 10px;
+    font-size: 8px;
   }
 `;
 const BarItem = [
