@@ -7,6 +7,7 @@ import {
   faUtensils,
   faBook,
   faBed,
+  faLandmark,
 } from "@fortawesome/free-solid-svg-icons";
 
 const NavigationContainer = styled.div`
@@ -73,6 +74,7 @@ const BarItem = [
   { text: "음식점", icon: faUtensils, link: "food" },
   { text: "스테이", icon: faBed, link: "stay" },
   { text: "여행기록", icon: faBook, link: "assay" },
+  { text: "랜드마크", icon: faLandmark, link: "landmark" },
 ];
 
 function Navigation({ selectCategory }: any) {

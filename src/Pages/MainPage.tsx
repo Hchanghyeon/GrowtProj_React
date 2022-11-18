@@ -38,7 +38,6 @@ function MainPage({ userLoginBtn, changeLoginState }: any) {
   const [userClickBtn, setUserClickBtn] = useState<string>("");
   const [assayClickBtn, setAssayClickBtn] = useState<boolean>(false);
 
-
   const changeState = () => {
     setClickMapBtn(!clickMapBtn);
   };
@@ -60,6 +59,9 @@ function MainPage({ userLoginBtn, changeLoginState }: any) {
     } else if (value === "assay") {
       requestValue = "assay";
       setAssayClickBtn(true);
+    } else if (value === "landmark") {
+      requestValue = "landmark";
+      setAssayClickBtn(false);
     } else {
       requestValue = "";
       setAssayClickBtn(false);
@@ -67,13 +69,9 @@ function MainPage({ userLoginBtn, changeLoginState }: any) {
     setUserClickBtn(requestValue);
   };
 
-
-
   return (
     <Container>
-      <Header
-        changeLoginState={changeLoginState}
-      />
+      <Header changeLoginState={changeLoginState} />
       <Navigation selectCategory={selectCategory}></Navigation>
       {clickMapBtn ? (
         <Map userClickBtn={userClickBtn} />

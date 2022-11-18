@@ -94,6 +94,7 @@ const SectionSpot = (userClickBtn: any) => {
   const [spotData, setSpotData] = useState<any[]>([]);
   const refNum: any = useRef(0);
   const [loading, setLoading] = useState(false);
+  const [landmarkCheck, setLandmarkCheck] = useState(false);
 
   const start: any = async () => {
     let data: any;
@@ -104,6 +105,11 @@ const SectionSpot = (userClickBtn: any) => {
         userClickBtn.userClickBtn,
         refNum.current
       );
+    }
+    if (userClickBtn.userClickBtn === "landmark") {
+      setLandmarkCheck(true);
+    } else {
+      setLandmarkCheck(false);
     }
     if (data.status === false) {
       setSpotData([]);
@@ -129,12 +135,14 @@ const SectionSpot = (userClickBtn: any) => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      setLoading(true);
-      refNum.current = refNum.current + 1;
-      setTimeout(() => {
-        start();
-      }, 500);
+    if (!landmarkCheck) {
+      if (scrollTop + clientHeight >= scrollHeight) {
+        setLoading(true);
+        refNum.current = refNum.current + 1;
+        setTimeout(() => {
+          start();
+        }, 500);
+      }
     }
   };
 

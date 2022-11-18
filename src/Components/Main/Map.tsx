@@ -83,13 +83,17 @@ const Text = styled.a`
 
 const Div = styled.div`
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   padding-left: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-left: 10px;
 `;
 
 const Div2 = styled.div`
   font-size: 11px;
   padding-left: 5px;
+  margin-left: 10px;
 `;
 
 const Span = styled.div`
@@ -177,6 +181,8 @@ const Map = (userClickBtn: any) => {
   const foodNum: any = useRef(0);
   const spotData: any = useRef([]);
   const assayNum: any = useRef(0);
+  const landmarkNum: any = useRef(0);
+  const [landmarkCheck, setLandmarkCheck] = useState<boolean>(false);
 
   let map: any = null;
   let marker: any;
@@ -239,6 +245,7 @@ const Map = (userClickBtn: any) => {
         forestNum.current = 0;
         homeNum.current = 0;
         foodNum.current = 0;
+        landmarkNum.current = 0;
         spotData.current.map((item: any) => {
           if (item.contentsvalue === "c1") {
             forestNum.current = forestNum.current + 1;
@@ -246,6 +253,8 @@ const Map = (userClickBtn: any) => {
             homeNum.current = homeNum.current + 1;
           } else if (item.contentsvalue === "c4") {
             foodNum.current = foodNum.current + 1;
+          } else if (item.contentsvalue === "landmark") {
+            landmarkNum.current = landmarkNum.current + 1;
           }
         });
       } else {
@@ -264,13 +273,25 @@ const Map = (userClickBtn: any) => {
         homeNum.current = 0;
         foodNum.current = 0;
         assayNum.current = 0;
+        landmarkNum.current = 0;
         spotData.current.map((item: any) => {
-          if (item.contentsvalue === "c1") {
+          if (
+            item.contentsvalue === "c1" &&
+            userClickBtn.userClickBtn !== "landmark"
+          ) {
             forestNum.current = forestNum.current + 1;
-          } else if (item.contentsvalue === "c3") {
+          } else if (
+            item.contentsvalue === "c3" &&
+            userClickBtn.userClickBtn !== "landmark"
+          ) {
             homeNum.current = homeNum.current + 1;
-          } else if (item.contentsvalue === "c4") {
+          } else if (
+            item.contentsvalue === "c4" &&
+            userClickBtn.userClickBtn !== "landmark"
+          ) {
             foodNum.current = foodNum.current + 1;
+          } else if (userClickBtn.userClickBtn === "landmark") {
+            landmarkNum.current = landmarkNum.current + 1;
           } else {
             assayNum.current = assayNum.current + 1;
           }
@@ -281,17 +302,23 @@ const Map = (userClickBtn: any) => {
       const home: any = document.getElementById("home");
       const forest: any = document.getElementById("forest");
       const assay: any = document.getElementById("assay2");
+      const landmark: any = document.getElementById("landmark2");
 
       food.innerHTML = foodNum.current;
       home.innerHTML = homeNum.current;
       forest.innerHTML = forestNum.current;
       assay.innerHTML = assayNum.current;
+      landmark.innerHTML = landmarkNum.current;
 
       const result: any = spotData.current;
       for (let i = 0; i < result.length; i++) {
         let longitude = result[i].longitude;
         let latitude = result[i].latitude;
         let contentsValue = result[i].contentsvalue;
+
+        if (userClickBtn.userClickBtn === "landmark") {
+          contentsValue = "landmark";
+        }
 
         //관광지
         if (contentsValue === "c1") {
@@ -325,6 +352,19 @@ const Map = (userClickBtn: any) => {
             icon: {
               content:
                 '<img src="/img/fast-food.png" style="width:32px; height:32px;"/>',
+              size: new naver.maps.Size(32, 32),
+              anchor: new naver.maps.Point(16, 32),
+              // origin: new naver.maps.Point(0, 0),
+              // anchor: new naver.maps.Point(25, 26)
+            },
+          });
+        } else if (contentsValue === "landmark") {
+          marker = new naver.maps.Marker({
+            map: map,
+            position: new naver.maps.LatLng(latitude, longitude),
+            icon: {
+              content:
+                '<img src="/img/mecca.png" style="width:32px; height:32px;"/>',
               size: new naver.maps.Size(32, 32),
               anchor: new naver.maps.Point(16, 32),
               // origin: new naver.maps.Point(0, 0),
@@ -414,12 +454,22 @@ const Map = (userClickBtn: any) => {
     homeNum.current = 0;
     foodNum.current = 0;
     assayNum.current = 0;
+    landmarkNum.current = 0;
     go();
+    if (userClickBtn.userClickBtn === "landmark") {
+      setLandmarkCheck(true);
+    } else {
+      setLandmarkCheck(false);
+    }
   }, [userClickBtn]);
 
   function moreData() {
-    refNum.current = refNum.current + 1;
-    go();
+    if (!landmarkCheck) {
+      refNum.current = refNum.current + 1;
+      go();
+    } else {
+      alert("요청 데이터가 전부 입니다.");
+    }
   }
 
   return (
@@ -429,12 +479,15 @@ const Map = (userClickBtn: any) => {
         <MoreBtn onClick={moreData}>더보기</MoreBtn>
         <MoreDiv>
           <MoreImg src="/img/forest.png" />
-          <span id="forest"></span> <MoreImg src="/img/fast-food.png" />
+          <span id="forest"></span>
+          <MoreImg src="/img/fast-food.png" />
           <span id="food2"></span>
           <MoreImg src="/img/home.png" />
           <span id="home"></span>
           <MoreImg src="/img/travel.png" />
           <span id="assay2"></span>
+          <MoreImg src="/img/mecca.png" />
+          <span id="landmark2"></span>
         </MoreDiv>
       </MapHeader>
       <DivContainer id="clickMapBtn">
