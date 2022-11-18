@@ -599,7 +599,7 @@ const SectionSpotInfo = () => {
         setCompleteExplain(
           `선택하신 관광지인 ${
             spotData.title
-          }은 지정된 랜드마크가 아니지만 업로드 해주신 사진은 그루트 랜드마크 중 ${
+          }은 지정된 랜드마크가 아니지만 업로드 해주신 사진은 GrowT의 랜드마크 중 ${
             result.class_name
           }하고 ${(result.rate * 100).toFixed(0)}% 정도 유사합니다`
         );
