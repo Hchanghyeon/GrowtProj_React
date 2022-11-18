@@ -1,15 +1,39 @@
 {
   "files": {
     "main.css": "/static/css/main.155dec7b.css",
+<<<<<<< HEAD
     "main.js": "/static/js/main.8ffbceee.js",
+=======
+<<<<<<< HEAD
+    "main.js": "/static/js/main.bcc0dc21.js",
+=======
+    "main.js": "/static/js/main.14a65de6.js",
+>>>>>>> e1019f5917ee70c72325ac7def034e5ef97fd7ef
+>>>>>>> 68eed7be92e40345f3e1cf8db27c3b887e0244f3
     "static/media/NanumSquareNeoTTF-cBd.woff2": "/static/media/NanumSquareNeoTTF-cBd.79d2b7fd23d6a661eff0.woff2",
     "static/media/Spinner2.gif": "/static/media/Spinner2.4ce34126a6844816de16.gif",
     "index.html": "/index.html",
     "main.155dec7b.css.map": "/static/css/main.155dec7b.css.map",
+<<<<<<< HEAD
     "main.8ffbceee.js.map": "/static/js/main.8ffbceee.js.map"
   },
   "entrypoints": [
     "static/css/main.155dec7b.css",
     "static/js/main.8ffbceee.js"
+=======
+<<<<<<< HEAD
+    "main.bcc0dc21.js.map": "/static/js/main.bcc0dc21.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.155dec7b.css",
+    "static/js/main.bcc0dc21.js"
+=======
+    "main.14a65de6.js.map": "/static/js/main.14a65de6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.155dec7b.css",
+    "static/js/main.14a65de6.js"
+>>>>>>> e1019f5917ee70c72325ac7def034e5ef97fd7ef
+>>>>>>> 68eed7be92e40345f3e1cf8db27c3b887e0244f3
   ]
 }
