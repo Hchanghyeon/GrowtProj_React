@@ -52,6 +52,7 @@ const Img = styled.div`
   text-align: center;
   background-size: 100% 100%;
   line-height: 250px;
+  font-size: 14px;
 `;
 
 const ImgContainer3 = styled.div`
@@ -435,6 +436,7 @@ const TextHeaderContianer = styled.div`
   width: 280px;
   margin: 0px auto;
   margin-bottom: 5px;
+  padding-left: 10px;
   font-size: 16px;
   font-weight: bold;
   color: black;
@@ -512,6 +514,7 @@ const SectionSpotInfo = () => {
   const [landmarkText, setLandmarkText] = useState<string>("");
   const [landmarkValue, setLandmarkValue] = useState<number>(0);
   const [landmarkBoolean, setLandmarkBoolean] = useState<boolean>(false);
+  const [imageSrc, setImageSrc] = useState<string>("");
 
   // 로그아웃
   const dispatch = useDispatch();
@@ -587,9 +590,14 @@ const SectionSpotInfo = () => {
         setComplete(false);
         setLandmarkText(result.class_name);
         setLandmarkValue(result.rate);
+        const spotImgData: any = await getSpotInfoData(result.contentid);
+        console.log(spotImgData);
+        setImageSrc(spotImgData.json[0].imgpath);
         setLandmarkBoolean(false);
         setCompleteExplain(
-          `선택하신 관광지는 랜드마크가 아니지만 그루트 랜드마크 중 ${
+          `선택하신 관광지인 ${
+            spotData.title
+          }은 지정된 랜드마크가 아니지만 그루트 랜드마크 중 ${
             result.class_name
           }하고 ${(result.rate * 100).toFixed(0)}% 정도 유사합니다`
         );
@@ -693,7 +701,7 @@ const SectionSpotInfo = () => {
   const handleImgModalClose = () => {
     setImageModal(false);
     setFiles("");
-    setTextExplain("이미지를 넣어주세요");
+    setTextExplain(`${spotData.title} 이미지를 넣어주세요`);
     setImageBtn("이미지 인증");
     setLoading(false);
     setAuthCom(false);
@@ -1080,7 +1088,7 @@ const SectionSpotInfo = () => {
           )}
         </Dialog>{" "}
       </>
-      <Dialog open={imageModal}>
+      <Dialog open={imageModal} style={{ width: "100%" }}>
         <DialogTitle id="responsive-dialog-title">
           <span>랜드마크 인증</span>
         </DialogTitle>
@@ -1096,12 +1104,23 @@ const SectionSpotInfo = () => {
           }}
         >
           <DialogContentText style={{ width: "280px" }}>
-            <TextHeaderContianer>{spotData.title}</TextHeaderContianer>
-
             {loading || authCom ? (
-              <ImgContainer3>
-                <ImgSrc src={spotData.imgpath}></ImgSrc>
-              </ImgContainer3>
+              landmarkBoolean ? (
+                <ImgContainer3>
+                  <ImgSrc src={spotData.imgpath}></ImgSrc>
+                </ImgContainer3>
+              ) : loading ? (
+                <>
+                  <ImgContainer2>
+                    <Img className="img_box">{textExplain}</Img>
+                  </ImgContainer2>
+                  <InputFile type="file" id="image" onChange={onLoadFile} />
+                </>
+              ) : (
+                <ImgContainer3>
+                  <ImgSrc src={imageSrc}></ImgSrc>
+                </ImgContainer3>
+              )
             ) : (
               <>
                 <ImgContainer2>
