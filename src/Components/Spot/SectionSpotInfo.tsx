@@ -607,8 +607,11 @@ const SectionSpotInfo = () => {
         setLandmarkBoolean(true);
         setLandmarkText(result.class_name);
         setLandmarkValue(result.rate);
-        if (result.rate > 70) {
+        if (result.rate > 0.7) {
           setComplete(true);
+          setCompleteExplain(
+            "인공지능으로 인식한 이미지 유사도가 70%를 넘어 인증가능합니다"
+          );
         } else {
           setComplete(false);
           setCompleteExplain(
