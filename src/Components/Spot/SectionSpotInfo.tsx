@@ -35,9 +35,9 @@ import axios from "axios";
 
 const ImgContainer2 = styled.div`
   position: relative;
-  max-width: 400px;
-  width: 100%;
-  height: 300px;
+  width: 280px;
+  height: 250px;
+  margin: 0px auto;
   border-style: solid;
   display: flex;
   justify-content: center;
@@ -51,29 +51,29 @@ const Img = styled.div`
   height: 100%;
   text-align: center;
   background-size: 100% 100%;
-  line-height: 300px;
+  line-height: 250px;
 `;
 
 const ImgContainer3 = styled.div`
   position: relative;
-  max-width: 400px;
-  width: 100%;
-  height: 280px;
+  width: 280px;
+  height: 250px;
+  margin: 0px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
 const Img2 = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 280px;
+  height: 250px;
   text-align: center;
   background-size: 100% 100%;
   line-height: 300px;
 `;
 
 const ImgSrc = styled.img`
-  width: 300px;
+  width: 280px;
   height: 250px;
   margin-bottom: 10px;
 `;
@@ -99,15 +99,16 @@ const SectionContainer = styled.div`
 `;
 
 const ContainerExplain = styled.div`
-  width: 100%;
+  width: 280px;
+  margin: 0px auto;
   text-align: center;
   font-size: 13px;
 `;
 
 const ImagePercent = styled.div`
-  width: 100%;
+  width: 280px;
+  margin: 0 auto;
   font-size: 13px;
-  padding-left: 10px;
   color: black;
   margin-bottom: 5px;
 `;
@@ -169,7 +170,7 @@ const NaverMap = styled.div`
 
 const NaverMap2 = styled.div`
   height: 300px;
-  width: 100%;
+  width: 280px;
   border-radius: 15px;
   margin-bottom: 10px;
 
@@ -415,19 +416,24 @@ const SpotTextHeader = styled.div`
   font-size: 13px;
   font-weight: bold;
   color: black;
+  width: 280px;
 `;
 
 const SpotTextContent = styled.div`
   font-size: 12px;
   font-weight: bold;
+  width: 280px;
 `;
 
 const SpotTextNotice = styled.div`
+  width: 280px;
   font-size: 12px;
   font-weight: bold;
 `;
 
 const TextHeaderContianer = styled.div`
+  width: 280px;
+  margin: 0px auto;
   margin-bottom: 5px;
   font-size: 16px;
   font-weight: bold;
@@ -435,7 +441,8 @@ const TextHeaderContianer = styled.div`
 `;
 
 const AddImageDiv = styled.div`
-  width: 100%;
+  width: 280px;
+  margin: 0px auto;
   margin-bottom: 5px;
   align-items: center;
   display: flex;
@@ -443,7 +450,8 @@ const AddImageDiv = styled.div`
 `;
 
 const ImageBtnDiv = styled.div`
-  width: 100%;
+  width: 280px;
+  margin: 0px auto;
   margin-bottom: 5px;
   align-items: center;
   display: flex;
@@ -452,9 +460,16 @@ const ImageBtnDiv = styled.div`
 
 const CompleteExplain = styled.div`
   width: 100%;
-  font-size: 15%;
-  padding-left: 10px;
-  color: orange;
+  font-size: 10px;
+  color: silver;
+`;
+
+const LandmarkText = styled.div`
+  width: 100%;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: bold;
+  color: black;
 `;
 
 const SectionSpotInfo = () => {
@@ -494,6 +509,9 @@ const SectionSpotInfo = () => {
   const [completeExplain, setCompleteExplain] = useState<string>("");
   const [imageBtnState, setImageBtnState] = useState<boolean>(false);
   const [imageBtnText, setImageBtnText] = useState<string>("랜드마크인증");
+  const [landmarkText, setLandmarkText] = useState<string>("");
+  const [landmarkValue, setLandmarkValue] = useState<number>(0);
+  const [landmarkBoolean, setLandmarkBoolean] = useState<boolean>(false);
 
   // 로그아웃
   const dispatch = useDispatch();
@@ -553,22 +571,39 @@ const SectionSpotInfo = () => {
     try {
       test = await fetch(`https://whitegreen.synology.me:8282/predict`, {
         method: "post",
-        mode: "no-cors", // no-cors,
-        headers: {
-          "content-type": "multipart/form-data",
-        },
         body: formData,
       });
       result = await test.json();
-      console.log(result);
       setLoading(false);
     } catch (err) {
-      error = true;
+      console.log(err);
       alert(err);
     }
 
     if (!error) {
-      alert(result);
+      setLoading(false);
+      setAuthCom(true);
+      if (result.randmark === "False") {
+        setComplete(false);
+        setLandmarkText(result.class_name);
+        setLandmarkValue(result.rate);
+        setLandmarkBoolean(false);
+        setCompleteExplain(
+          `선택하신 관광지는 랜드마크가 아니지만 그루트 랜드마크 중 ${
+            result.class_name
+          }하고 ${(result.rate * 100).toFixed(0)}% 정도 유사합니다`
+        );
+      } else {
+        setLandmarkBoolean(true);
+        setLandmarkText(result.class_name);
+        setLandmarkValue(result.rate);
+        if (result.rate > 70) {
+          setComplete(true);
+        } else {
+          setComplete(false);
+          setCompleteExplain("유사도가 70%를 넘지 못하여 인증 할 수 없습니다");
+        }
+      }
     }
   };
 
@@ -992,7 +1027,17 @@ const SectionSpotInfo = () => {
           </DialogTitle>
           {nowState ? (
             <>
-              <DialogContent style={{ width: "300px", height: "380px" }}>
+              <DialogContent
+                style={{
+                  width: "300px",
+                  height: "380px",
+                  padding: "0px 10px",
+                  margin: "0px auto",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
                 <NaverMap2 id="map2" />
                 <DialogContentText>
                   <SpotTextHeader>관광지와 현재 나와의 거리</SpotTextHeader>
@@ -1040,9 +1085,17 @@ const SectionSpotInfo = () => {
           <span>랜드마크 인증</span>
         </DialogTitle>
         <DialogContent
-          style={{ maxWidth: "300px", width: "100%", height: "480px" }}
+          style={{
+            width: "300px",
+            height: "480px",
+            padding: "0px 10px",
+            margin: "0px auto",
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
         >
-          <DialogContentText style={{ width: "100%" }}>
+          <DialogContentText style={{ width: "280px" }}>
             <TextHeaderContianer>{spotData.title}</TextHeaderContianer>
 
             {loading || authCom ? (
@@ -1082,13 +1135,75 @@ const SectionSpotInfo = () => {
               <></>
             )}
             {authCom ? (
-              <>
-                <ImagePercent> 랜드마크 유사도 : %</ImagePercent>
-              </>
+              landmarkBoolean ? (
+                <>
+                  <LandmarkText>
+                    <div>
+                      <span style={{ color: "black", fontSize: "14px" }}>
+                        비교 랜드마크
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+                      <span
+                        style={{
+                          color: "orange",
+                          marginRight: "7px",
+                          fontSize: "12px",
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faLandmark} />
+                      </span>
+                      {landmarkText}
+                    </div>
+                  </LandmarkText>
+                  <ImagePercent>
+                    <div>
+                      <span style={{ color: "black", fontSize: "14px" }}>
+                        랜드마크 유사도
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+                      {(landmarkValue * 100).toFixed(2)}%
+                    </div>
+                  </ImagePercent>
+                  <CompleteExplain>{completeExplain}</CompleteExplain>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <span style={{ color: "black", fontSize: "14px" }}>
+                      유사한 랜드마크
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+                    <span
+                      style={{
+                        color: "orange",
+                        marginRight: "7px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faLandmark} />
+                    </span>
+                    {landmarkText}
+                  </div>
+                  <ImagePercent>
+                    <div>
+                      <span style={{ color: "black", fontSize: "14px" }}>
+                        랜드마크 유사도
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "12px", marginBottom: "10px" }}>
+                      {(landmarkValue * 100).toFixed(2)}%
+                    </div>
+                  </ImagePercent>
+                  <CompleteExplain>{completeExplain}</CompleteExplain>
+                </>
+              )
             ) : (
               <></>
             )}
-            <CompleteExplain>{completeExplain}</CompleteExplain>
+
             {authCom || !authBtn ? (
               <></>
             ) : (
@@ -1105,10 +1220,8 @@ const SectionSpotInfo = () => {
                 </LoadingButton>
               </ImageBtnDiv>
             )}
-
-            <TestBtn onClick={toggleBtn}>test</TestBtn>
           </DialogContentText>
-          <DialogActions>
+          <DialogActions style={{ width: "100%" }}>
             <Button size="small" autoFocus onClick={handleImgModalClose}>
               <div>취소</div>
             </Button>
