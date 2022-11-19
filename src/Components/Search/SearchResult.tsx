@@ -56,7 +56,8 @@ const ResultDivTitle = styled.div`
   }
 `;
 const ResultTitle = styled.div`
-  width: 80%;
+  width: 60%;
+  font-size: 12px;
 `;
 
 const Input = styled.input`
@@ -78,10 +79,13 @@ const ResultContainer = styled.div`
 `;
 
 const ResultLike = styled.div`
-  width: 20%;
+  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 
 const ResultHead = styled.div`
@@ -91,16 +95,25 @@ const ResultCategory = styled.div`
   font-size: 14px;
   color: silver;
   margin-top: 4px;
+  @media screen and (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 const ResultAddress = styled.div`
   font-size: 14px;
   color: silver;
+  @media screen and (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 
 const ResultTag = styled.div`
   font-size: 12px;
   color: silver;
   margin-top: 5px;
+  @media screen and (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 
 const LikeNum = styled.div`
