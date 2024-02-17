@@ -25,9 +25,9 @@ https://mike96.synology.me:3000/
 
 ### Git 주소
 백엔드
-https://github.com/Hchanghyeon/GrowtProj
+https://github.com/Hchanghyeon/growing-trip-backend
 프론트엔드
-https://github.com/Hchanghyeon/GrowtProj_React
+https://github.com/Hchanghyeon/growing-trip-frontend
 
 ### 📽️ 구현 시연 영상
 https://youtu.be/iMxMQCam5oE
