@@ -1,4 +1,4 @@
-![슬라이드8](https://github.com/Hchanghyeon/growing-trip-frontend/assets/92444744/eadb0437-53a1-458f-a263-600db815eab4)# growing-trip-frontend
+# growing-trip-frontend
 
 사용자가 여행을 다니며 자신의 캐릭터와 함께 같이 성장하는 여행 SNS 웹애플리케이션
 
