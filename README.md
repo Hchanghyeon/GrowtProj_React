@@ -1,6 +1,9 @@
-# Growt_React(FE)
+![슬라이드8](https://github.com/Hchanghyeon/growing-trip-frontend/assets/92444744/eadb0437-53a1-458f-a263-600db815eab4)# growing-trip-frontend
 
 사용자가 여행을 다니며 자신의 캐릭터와 함께 같이 성장하는 여행 SNS 웹애플리케이션
+
+### 팀 구성
+팀장(본인 웹프론트, 웹백엔드), 팀원1(인공지능), 팀원2(DB)
 
 ### 본인 역할 및 제작 기능
 - 시스템 전체 설계 및 서버 구축(Synology Nas Docker)/배포
@@ -29,5 +32,6 @@ https://github.com/Hchanghyeon/GrowtProj_React
 ### 📽️ 구현 시연 영상
 https://youtu.be/iMxMQCam5oE
 
-### 팀 구성
-팀장(본인 웹프론트, 웹백엔드), 팀원1(인공지능), 팀원2(DB)
+### 관련 이미지
+![슬라이드7](https://github.com/Hchanghyeon/growing-trip-frontend/assets/92444744/c9a2d6d5-081b-4fe0-946b-2063b91d781b)
+![슬라이드8](https://github.com/Hchanghyeon/growing-trip-frontend/assets/92444744/ca80d53b-1b9b-4f30-a993-0388166450cb)
