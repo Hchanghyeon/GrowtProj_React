@@ -1,12 +1,5 @@
-function required(key: string, defaultValue = undefined): any {
-  const value: any = process.env[key] || defaultValue;
-  if (value == null) {
-    throw new Error(`key ${key} is undefined`);
-  }
-  return value;
-}
 export const config: any = {
   http: {
-    BASE_URL: required("REACT_APP_BASE_URL"),
+    BASE_URL: "https://mike96.synology.me:3888"
   },
 };
